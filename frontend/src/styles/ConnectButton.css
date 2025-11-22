@@ -1,0 +1,39 @@
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border: 1px solid #2a364b;
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+.btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #3c6fe1;
+  font-size: 30px;
+}
+
+.btn:hover {
+  color: #ff9e48;
+}
+
+.popup-container {
+  position: absolute;
+  right: 2%;
+  top: 20%;
+  padding: 20px;
+  background: #f6f6f6;
+  border: 1px solid #f4d2c0;
+  border-radius: 10px;
+}
+
+.connect-btn {
+  color: #f6f6f6;
+  background: #3c6fe1;
+  text-decoration: none;
+  border: none;
+  font-size: 15px;
+  padding: 5px;
+  border-radius: 5px;
+}
