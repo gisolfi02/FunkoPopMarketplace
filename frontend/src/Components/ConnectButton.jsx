@@ -6,7 +6,7 @@ import {
   faCircleUser,
   faArrowRightFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
-import "../styles/ConnectButton.css";
+import sytles from "../styles/ConnectButton.module.css";
 
 library.add(faCircleUser, faArrowRightFromBracket);
 
@@ -63,24 +63,24 @@ export default function ConnectButton({ onConnected }) {
 
   return (
     <div>
-      <button className="btn" onClick={() => setShowPopup(!showPopup)}>
+      <button className={sytles.btn} onClick={() => setShowPopup(!showPopup)}>
         <FontAwesomeIcon icon={["fas", "circle-user"]} />
       </button>
 
       {showPopup && !account && (
-        <div className="popup-container">
-          <button onClick={connect} className="connect-btn">
+        <div className={sytles["popup-container"]}>
+          <button onClick={connect} className={sytles["connect-btn"]}>
             Accedi con MetaMask
           </button>
         </div>
       )}
 
       {showPopup && account && (
-        <div className="popup-container">
-          <a className="profile-link" href="/profile">
+        <div className={sytles["popup-container"]}>
+          <a className={sytles["profile-link"]} href="/profile">
             TO DO
           </a>
-          <button className="logout-btn" onClick={logout}>
+          <button className={sytles["logout-btn"]} onClick={logout}>
             Logout{" "}
             <FontAwesomeIcon icon={["fas", "arrow-right-from-bracket"]} />
           </button>
