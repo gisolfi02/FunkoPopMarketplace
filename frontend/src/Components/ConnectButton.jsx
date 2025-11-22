@@ -2,10 +2,13 @@ import React, { useEffect, useState } from "react";
 import { getProviderAndSigner, networkOk } from "../lib/eth";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCircleUser,
+  faArrowRightFromBracket,
+} from "@fortawesome/free-solid-svg-icons";
 import "../styles/ConnectButton.css";
 
-library.add(faCircleUser);
+library.add(faCircleUser, faArrowRightFromBracket);
 
 export default function ConnectButton({ onConnected }) {
   const [account, setAccount] = useState(null);
@@ -14,15 +17,41 @@ export default function ConnectButton({ onConnected }) {
 
   async function connect() {
     try {
+      await window.ethereum.request({
+        method: "wallet_requestPermissions",
+        params: [{ eth_accounts: {} }],
+      });
+
+      const accounts = await window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
+
+      const selectedAccount = accounts[0];
+
       const { provider, signer } = await getProviderAndSigner();
-      const addr = await signer.getAddress();
       const net = await networkOk(provider);
-      setAccount(addr);
+
+      setAccount(selectedAccount);
       setChain(net?.chainId?.toString());
-      onConnected({ provider, signer, account: addr, chainId: net.chainId });
+
+      onConnected({
+        provider,
+        signer,
+        account: selectedAccount,
+        chainId: net.chainId,
+      });
+      setShowPopup(!showPopup);
     } catch (e) {
+      console.error(e);
       alert(e.message);
     }
+  }
+
+  function logout() {
+    setAccount(null);
+    setChain(null);
+    setShowPopup(false);
+    window.location.reload();
   }
 
   useEffect(() => {
@@ -49,8 +78,12 @@ export default function ConnectButton({ onConnected }) {
       {showPopup && account && (
         <div className="popup-container">
           <a className="profile-link" href="/profile">
-            Vai alla tua pagina personale →
+            TO DO
           </a>
+          <button className="logout-btn" onClick={logout}>
+            Logout{" "}
+            <FontAwesomeIcon icon={["fas", "arrow-right-from-bracket"]} />
+          </button>
         </div>
       )}
     </div>
