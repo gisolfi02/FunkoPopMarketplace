@@ -5,7 +5,7 @@ contract FunkoPopMarketplace {
     struct FunkoPop {
         uint id;
         string nameFunko;
-        string description;
+        string description; // nameCharacter - category - license - boxNumber
         string image;
         uint price;      
    

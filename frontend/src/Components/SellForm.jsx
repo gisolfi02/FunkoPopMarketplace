@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { getContract, parseEther } from '../lib/eth';
-import { uploadToLighthouse } from '../lib/ipfs';
+import React, { useState } from "react";
+import { getContract, parseEther } from "../lib/eth";
+import { uploadToLighthouse } from "../lib/ipfs";
 import styles from "../styles/SellForm.module.css";
 
 const CATEGORIES = [
@@ -29,7 +29,7 @@ const CATEGORIES = [
   "SciFi",
   "Seasonal",
   "Sports",
-  "Video Games"
+  "Video Games",
 ];
 
 const LICENSES = [
@@ -296,28 +296,26 @@ const LICENSES = [
   "WWE",
   "Xena Warrior Princess",
   "Yellowstone",
-  "Yu-Gi-Oh!"
+  "Yu-Gi-Oh!",
 ];
 
-
-
 export default function SellForm({ onCreated }) {
-  const [form, setForm] = useState({ 
-    nameFunko:"",
-    nameCharacter:"",
-    category:"",
-    license:"",
-    boxNumber:"",
-    image:"", 
-    price:"",
+  const [form, setForm] = useState({
+    nameFunko: "",
+    nameCharacter: "",
+    category: "",
+    license: "",
+    boxNumber: "",
+    image: "",
+    price: "",
     isAuction: false,
-    auctionDuration:""
+    auctionDuration: "",
   });
 
   const [file, setFile] = useState(null);
   const [busy, setBusy] = useState(false);
 
-  const set = (k,v)=>setForm(f=>({...f,[k]:v}));
+  const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
   async function handleUpload() {
     try {
@@ -327,39 +325,37 @@ export default function SellForm({ onCreated }) {
       alert("Immagine caricata su Lighthouse!");
     } catch (e) {
       alert(e.message);
-    } finally { setBusy(false); }
+    } finally {
+      setBusy(false);
+    }
   }
 
   async function submit(e) {
     e.preventDefault();
     setBusy(true);
     try {
-      const { BrowserProvider } = await import('ethers');
+      const { BrowserProvider } = await import("ethers");
       const provider = new BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
       const c = await getContract(signer);
 
       const priceWei = parseEther(form.price);
-      const boxNumber = toString(form.boxNumber);
 
       if (!form.isAuction) {
-        
         const tx = await c.createFunko(
           form.nameFunko,
           form.nameCharacter,
           form.image,
           form.category,
           form.license,
-          boxNumber,
+          form.boxNumber,
           priceWei
         );
 
         await tx.wait();
         onCreated?.();
         alert("Funko messo in vendita!");
-      } 
-      else {
-        
+      } else {
         const durationSeconds = Number(form.auctionDuration) * 60;
 
         const tx = await c.createAuction(
@@ -368,9 +364,9 @@ export default function SellForm({ onCreated }) {
           form.image,
           form.category,
           form.license,
-          boxNumber,
-          priceWei,          // starting price in ETH → wei
-          durationSeconds    // minuti → secondi
+          form.boxNumber,
+          priceWei, // starting price in ETH → wei
+          durationSeconds // minuti → secondi
         );
 
         await tx.wait();
@@ -384,42 +380,74 @@ export default function SellForm({ onCreated }) {
     }
   }
 
-
   return (
     <form className={styles.card} onSubmit={submit}>
       <h3 className={styles.h3}>Vendi un Funko Pop</h3>
 
       {/*Nome Funko Pop*/}
-      <input className={styles.input} placeholder="Nome Funko"
-             value={form.nameFunko} onChange={e=>set('nameFunko', e.target.value)} required />
-      
+      <input
+        className={styles.input}
+        placeholder="Nome Funko"
+        value={form.nameFunko}
+        onChange={(e) => set("nameFunko", e.target.value)}
+        required
+      />
+
       {/*Nome Personaggio*/}
-      <input className={styles.input} placeholder="Nome Personaggio"
-             value={form.nameCharacter} onChange={e=>set('nameCharacter', e.target.value)} required />
+      <input
+        className={styles.input}
+        placeholder="Nome Personaggio"
+        value={form.nameCharacter}
+        onChange={(e) => set("nameCharacter", e.target.value)}
+        required
+      />
 
       {/*Numero scatola*/}
-      <input className={styles.input} placeholder="Numero scatola" type='number'
-             value={form.boxNumber} onChange={e=>set('boxNumber', e.target.value)} required />
+      <input
+        className={styles.input}
+        placeholder="Numero scatola"
+        value={form.boxNumber}
+        onChange={(e) => set("boxNumber", e.target.value)}
+        required
+      />
 
       {/*Categoria*/}
-      <select className={styles.input} value={form.category} onChange={e => set("category", e.target.value)} required> 
-      <option value="">Seleziona la categoria</option>
-      {CATEGORIES.map(cat => (
-        <option key={cat} value={cat}>{cat}</option>
-      ))}
+      <select
+        className={styles.input}
+        value={form.category}
+        onChange={(e) => set("category", e.target.value)}
+        required
+      >
+        <option value="">Seleziona la categoria</option>
+        {CATEGORIES.map((cat) => (
+          <option key={cat} value={cat}>
+            {cat}
+          </option>
+        ))}
       </select>
 
       {/*Licenza*/}
-      <select className={styles.input} value={form.license} onChange={e => set("license", e.target.value)} required> 
-      <option value="">Seleziona la licenza</option>
-      {LICENSES.map(lic => (
-        <option key={lic} value={lic}>{lic}</option>
-      ))}
+      <select
+        className={styles.input}
+        value={form.license}
+        onChange={(e) => set("license", e.target.value)}
+        required
+      >
+        <option value="">Seleziona la licenza</option>
+        {LICENSES.map((lic) => (
+          <option key={lic} value={lic}>
+            {lic}
+          </option>
+        ))}
       </select>
 
       {/*Immagine*/}
-      <input className={styles.input} placeholder="Link immagine o ipfs://"
-             value={form.image} onChange={e=>set('image', e.target.value)} />
+      <input
+        className={styles.input}
+        placeholder="Link immagine o ipfs://"
+        value={form.image}
+        onChange={(e) => set("image", e.target.value)}
+      />
 
       <div className={styles.row}>
           <input id="fileUpload" type="file" accept="image/*" 
@@ -451,13 +479,28 @@ export default function SellForm({ onCreated }) {
       
       {/* Se VENDITA NORMALE */}
       {!form.isAuction && (
+<<<<<<< HEAD
         <div>
           <input className={styles.input} placeholder="Prezzo (ETH)" value={form.price} onChange={e => set("price", e.target.value)} required/>
           <button className={styles.btn} disabled={busy}>Crea annuncio</button>
+=======
+        <div className={styles.row}>
+          <input
+            className={styles.input}
+            placeholder="Prezzo (ETH)"
+            value={form.price}
+            onChange={(e) => set("price", e.target.value)}
+            required
+          />
+          <button className={styles.btn} disabled={busy}>
+            Crea annuncio
+          </button>
+>>>>>>> 581c2e1f9e56b0e414fe5c8832e6859bb3ea6c10
         </div>
       )}
       {/* Se ASTA */}
       {form.isAuction && (
+<<<<<<< HEAD
         <div>
           <input className={styles.input} placeholder="Prezzo di partenza (ETH)" value={form.price} onChange={e => set("price", e.target.value)} required/>
           <input className={styles.input} placeholder="Durata asta (minuti)" type="number" value={form.auctionDuration} onChange={e => set("auctionDuration", e.target.value)} required/>
@@ -467,6 +510,31 @@ export default function SellForm({ onCreated }) {
       </div>
 
       
+=======
+        <>
+          <input
+            className={styles.input}
+            placeholder="Prezzo di partenza (ETH)"
+            value={form.price}
+            onChange={(e) => set("price", e.target.value)}
+            required
+          />
+
+          <input
+            className={styles.input}
+            placeholder="Durata asta (minuti)"
+            type="number"
+            value={form.auctionDuration}
+            onChange={(e) => set("auctionDuration", e.target.value)}
+            required
+          />
+
+          <button className={styles.btn} disabled={busy}>
+            Crea annuncio
+          </button>
+        </>
+      )}
+>>>>>>> 581c2e1f9e56b0e414fe5c8832e6859bb3ea6c10
     </form>
   );
 }

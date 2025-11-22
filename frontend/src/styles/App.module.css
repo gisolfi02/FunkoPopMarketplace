@@ -1,0 +1,34 @@
+.selection {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.btnLeft,
+.btnRight {
+  width: 50%;
+  font-size: 20px;
+  border: none;
+  background: #ff9e48;
+  padding: 10px;
+  color: #f6f6f6;
+  cursor: pointer;
+}
+
+.btnLeft:hover {
+  background: linear-gradient(90deg, #ff9e48, #133f9e);
+}
+
+.btnLeft:disabled {
+  background: #133f9e;
+  cursor: inherit;
+}
+
+.btnRight:hover {
+  background: linear-gradient(270deg, #ff9e48, #133f9e);
+}
+
+.btnRight:disabled {
+  background: #133f9e;
+  cursor: inherit;
+}
