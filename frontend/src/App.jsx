@@ -10,6 +10,11 @@ export default function App() {
   return (
     <div className="container">
       <Header setSession={setSession} />
+      <div className="row" style={{alignItems:'flex-start'}}>
+        <div style={{flex:1}}>
+          <SellForm onCreated={() => window.location.reload()} />
+        </div>
+      </div>
     </div>
   );
 }
