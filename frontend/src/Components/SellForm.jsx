@@ -479,28 +479,13 @@ export default function SellForm({ onCreated }) {
       
       {/* Se VENDITA NORMALE */}
       {!form.isAuction && (
-<<<<<<< HEAD
         <div>
           <input className={styles.input} placeholder="Prezzo (ETH)" value={form.price} onChange={e => set("price", e.target.value)} required/>
           <button className={styles.btn} disabled={busy}>Crea annuncio</button>
-=======
-        <div className={styles.row}>
-          <input
-            className={styles.input}
-            placeholder="Prezzo (ETH)"
-            value={form.price}
-            onChange={(e) => set("price", e.target.value)}
-            required
-          />
-          <button className={styles.btn} disabled={busy}>
-            Crea annuncio
-          </button>
->>>>>>> 581c2e1f9e56b0e414fe5c8832e6859bb3ea6c10
         </div>
       )}
       {/* Se ASTA */}
       {form.isAuction && (
-<<<<<<< HEAD
         <div>
           <input className={styles.input} placeholder="Prezzo di partenza (ETH)" value={form.price} onChange={e => set("price", e.target.value)} required/>
           <input className={styles.input} placeholder="Durata asta (minuti)" type="number" value={form.auctionDuration} onChange={e => set("auctionDuration", e.target.value)} required/>
@@ -510,31 +495,6 @@ export default function SellForm({ onCreated }) {
       </div>
 
       
-=======
-        <>
-          <input
-            className={styles.input}
-            placeholder="Prezzo di partenza (ETH)"
-            value={form.price}
-            onChange={(e) => set("price", e.target.value)}
-            required
-          />
-
-          <input
-            className={styles.input}
-            placeholder="Durata asta (minuti)"
-            type="number"
-            value={form.auctionDuration}
-            onChange={(e) => set("auctionDuration", e.target.value)}
-            required
-          />
-
-          <button className={styles.btn} disabled={busy}>
-            Crea annuncio
-          </button>
-        </>
-      )}
->>>>>>> 581c2e1f9e56b0e414fe5c8832e6859bb3ea6c10
     </form>
   );
 }
