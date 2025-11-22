@@ -4,11 +4,10 @@ import { getContract } from "../lib/eth";
 import styles from "../styles/ListingGrid.module.css";
 import sadFace from "../img/sad.png";
 
-export default function ListingGrid({ account, mode }) {
+export default function ListingGrid({ account, mode, search }) {
   const [items, setItems] = useState([]);
 
   async function fetchListings() {
-    setLoading(true);
     try {
       const { BrowserProvider } = await import("ethers");
       const provider = new BrowserProvider(window.ethereum);
@@ -29,7 +28,16 @@ export default function ListingGrid({ account, mode }) {
           acc.push(F);
         } catch {}
       }
-      setItems(acc);
+
+      const filtered = acc.filter((F) => {
+        const q = search.toLowerCase();
+        return (
+          F.nameFunko?.toLowerCase().includes(q) ||
+          F.description?.toLowerCase().includes(q)
+        );
+      });
+
+      setItems(filtered);
     } catch (e) {
       alert(e.message);
     }
@@ -37,7 +45,7 @@ export default function ListingGrid({ account, mode }) {
 
   useEffect(() => {
     fetchListings();
-  }, [mode]);
+  }, [mode, search]);
 
   async function handleBuy(id, priceWei) {
     try {
@@ -45,10 +53,62 @@ export default function ListingGrid({ account, mode }) {
       const provider = new BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
       const c = await getContract(signer);
-      const tx = await c.buyFunkoPop(id, { value: priceWei });
+      const tx = await c.buyFunko(id, { value: priceWei });
       await tx.wait();
       await fetchListings();
       alert("Acquisto effettuato!");
+    } catch (e) {
+      alert(e.message);
+    }
+  }
+
+  async function handleBid(id, ethAmount) {
+    try {
+      const amountWei = (await import("ethers")).parseEther(ethAmount);
+
+      const { BrowserProvider } = await import("ethers");
+      const provider = new BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const c = await getContract(signer);
+
+      const tx = await c.placeBid(id, { value: amountWei });
+      await tx.wait();
+      await fetchListings();
+      alert("Offerta inviata!");
+    } catch (e) {
+      alert(e.message);
+    }
+  }
+
+  async function handleFinalizeAuction(id) {
+    try {
+      const { BrowserProvider } = await import("ethers");
+      const provider = new BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const c = await getContract(signer);
+
+      const tx = await c.finalizeAuction(id);
+      await tx.wait();
+      await fetchListings();
+      alert("Asta finalizzata!");
+    } catch (e) {
+      alert(e.message);
+    }
+  }
+
+  async function handleConfirmReceived(id) {
+    try {
+      const { BrowserProvider } = await import("ethers");
+      const provider = new BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const c = await getContract(signer);
+
+      let tx;
+      tx = await c.confirmReceived(id);
+
+      await tx.wait();
+      await fetchListings();
+      alert("Ricezione confermata!");
     } catch (e) {
       alert(e.message);
     }
@@ -65,7 +125,15 @@ export default function ListingGrid({ account, mode }) {
   return (
     <div className={styles.grid}>
       {items.map((F) => (
-        <ListingCard key={String(F.id)} F={F} me={account} onBuy={handleBuy} />
+        <ListingCard
+          key={String(F.id)}
+          F={F}
+          me={account}
+          onBuy={handleBuy}
+          onBid={handleBid}
+          onFinalizeAuction={handleFinalizeAuction}
+          onConfirmReceived={handleConfirmReceived}
+        />
       ))}
     </div>
   );
