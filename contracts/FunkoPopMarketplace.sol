@@ -7,8 +7,8 @@ contract FunkoPopMarketplace {
         string nameFunko;
         string description;
         string image;
-        uint price;
-
+        uint price;      
+   
         //VENDITA DIRETTA
         address payable seller;
         address payable buyer;
