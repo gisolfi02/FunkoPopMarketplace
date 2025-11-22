@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { getContract, parseEther } from '../lib/eth';
 import { uploadToLighthouse } from '../lib/ipfs';
+import styles from "../styles/SellForm.module.css";
 
 const CATEGORIES = [
   "Action & Adventure",
@@ -385,23 +386,23 @@ export default function SellForm({ onCreated }) {
 
 
   return (
-    <form className="card" onSubmit={submit}>
-      <h3>Vendi un Funko Pop</h3>
+    <form className={styles.card} onSubmit={submit}>
+      <h3 className={styles.h3}>Vendi un Funko Pop</h3>
 
       {/*Nome Funko Pop*/}
-      <input className="input" placeholder="Nome Funko"
+      <input className={styles.input} placeholder="Nome Funko"
              value={form.nameFunko} onChange={e=>set('nameFunko', e.target.value)} required />
       
       {/*Nome Personaggio*/}
-      <input className="input" placeholder="Nome Personaggio"
+      <input className={styles.input} placeholder="Nome Personaggio"
              value={form.nameCharacter} onChange={e=>set('nameCharacter', e.target.value)} required />
 
       {/*Numero scatola*/}
-      <input className="input" placeholder="Numero scatola" type='number'
+      <input className={styles.input} placeholder="Numero scatola" type='number'
              value={form.boxNumber} onChange={e=>set('boxNumber', e.target.value)} required />
 
       {/*Categoria*/}
-      <select className="input" value={form.category} onChange={e => set("category", e.target.value)} required> 
+      <select className={styles.input} value={form.category} onChange={e => set("category", e.target.value)} required> 
       <option value="">Seleziona la categoria</option>
       {CATEGORIES.map(cat => (
         <option key={cat} value={cat}>{cat}</option>
@@ -409,7 +410,7 @@ export default function SellForm({ onCreated }) {
       </select>
 
       {/*Licenza*/}
-      <select className="input" value={form.license} onChange={e => set("license", e.target.value)} required> 
+      <select className={styles.input} value={form.license} onChange={e => set("license", e.target.value)} required> 
       <option value="">Seleziona la licenza</option>
       {LICENSES.map(lic => (
         <option key={lic} value={lic}>{lic}</option>
@@ -417,13 +418,13 @@ export default function SellForm({ onCreated }) {
       </select>
 
       {/*Immagine*/}
-      <input className="input" placeholder="Link immagine o ipfs://"
+      <input className={styles.input} placeholder="Link immagine o ipfs://"
              value={form.image} onChange={e=>set('image', e.target.value)} />
 
-      <div className="row">
+      <div className={styles.row}>
         <input type="file" accept="image/*"
                onChange={e => setFile(e.target.files[0])} />
-        <button type="button" className="btn"
+        <button type="button" className={styles.btn}
                 disabled={!file || busy}
                 onClick={handleUpload}>
           Carica su IPFS (Lighthouse)
@@ -431,7 +432,7 @@ export default function SellForm({ onCreated }) {
       </div>
 
       {/*Selezione tipologia di vendita*/}
-      <div className="row" style={{ marginTop: "10px", marginBottom: "10px" }}>
+      <div className={styles.row} style={{ marginTop: "10px", marginBottom: "10px" }}>
         <label style={{ display:"flex", alignItems:"center", gap:"6px" }}>
           <input 
               type="radio" 
@@ -453,15 +454,15 @@ export default function SellForm({ onCreated }) {
 
       {/* Se VENDITA NORMALE */}
       {!form.isAuction && (
-        <div className="row">
+        <div className={styles.row}>
           <input 
-            className="input" 
+            className={styles.input} 
             placeholder="Prezzo (ETH)"
             value={form.price}
             onChange={e => set("price", e.target.value)}
             required
           />
-          <button className="btn" disabled={busy}>Crea annuncio</button>
+          <button className={styles.btn} disabled={busy}>Crea annuncio</button>
         </div>
       )}
       {/* Se ASTA */}
@@ -469,7 +470,7 @@ export default function SellForm({ onCreated }) {
         <>
           
             <input 
-              className="input"
+              className={styles.input}
               placeholder="Prezzo di partenza (ETH)"
               value={form.price}
               onChange={e => set("price", e.target.value)}
@@ -478,7 +479,7 @@ export default function SellForm({ onCreated }) {
 
           
             <input 
-              className="input"
+              className={styles.input}
               placeholder="Durata asta (minuti)"
               type="number"
               value={form.auctionDuration}
@@ -486,7 +487,7 @@ export default function SellForm({ onCreated }) {
               required
             />
 
-          <button className="btn" disabled={busy}>Crea annuncio</button>
+          <button className={styles.btn} disabled={busy}>Crea annuncio</button>
         </>
       )}
 

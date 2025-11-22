@@ -27,6 +27,11 @@ export default function App() {
         </button>
       </div>
       <ListingGrid account={session?.account} mode={viewMode}></ListingGrid>
+      <div className="row" style={{ alignItems: "flex-start" }}>
+        <div style={{ flex: 1 }}>
+          <SellForm onCreated={() => window.location.reload()} />
+        </div>
+      </div>
     </div>
   );
 }
