@@ -1,0 +1,34 @@
+.card {
+  background: #111823;
+  border: 1px solid #1f2a3a;
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.row {
+}
+
+.badge {
+}
+
+.active {
+}
+
+.terminated {
+}
+
+.btn {
+}
+
+.img {
+  width: 100%;
+  border-radius: 12px;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+}
+
+.p {
+}
+
+.h3 {
+}

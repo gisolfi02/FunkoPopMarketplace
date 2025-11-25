@@ -11,7 +11,9 @@ library.add(faMagnifyingGlass);
 export default function Header({ setSession, onSearch }) {
   return (
     <header>
-      <img src={logo} alt="Logo" height={150} />
+      <a href="/">
+        <img src={logo} alt="Logo" height={150} />
+      </a>
       <div className={styles.searchContainer}>
         <FontAwesomeIcon
           icon={["fas", "magnifying-glass"]}

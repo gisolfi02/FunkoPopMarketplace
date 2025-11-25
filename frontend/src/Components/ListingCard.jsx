@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { formatEther } from "../lib/eth";
 import { toHttpFromIpfs } from "../lib/ipfs";
+import styles from "../styles/ListingCard.module.css";
 
 export default function ListingCard({
   F,
@@ -56,36 +57,27 @@ export default function ListingCard({
   const auctionExpired = isAuction && timeLeft === "00:00:00";
 
   return (
-    <div className="card">
+    <div className={styles.card}>
       {/* IMMAGINE */}
-      <img
-        src={img}
-        alt={F.nameFunko}
-        style={{
-          width: "100%",
-          borderRadius: 12,
-          aspectRatio: "4/3",
-          objectFit: "cover",
-        }}
-      />
+      <img src={img} alt={F.nameFunko} className={styles.img} />
 
       {/* TITOLO */}
-      <h3 style={{ marginBottom: 6 }}>{F.nameFunko}</h3>
+      <h3 className={styles.h3}>{F.nameFunko}</h3>
 
       {/* DESCRIZIONE */}
-      <p style={{ fontSize: "0.9rem", opacity: 0.8 }}>{F.description}</p>
+      <p className={styles.p}>{F.description}</p>
 
       {/* SEZIONE PREZZI / ASTA */}
       {!isAuction ? (
         // ============================
         //        VENDITA DIRETTA
         // ============================
-        <div className="row" style={{ justifyContent: "space-between" }}>
+        <div className={styles.row}>
           <strong>{formatEther(F.price)} ETH</strong>
           {isSold ? (
-            <span className="badge">VENDUTO</span>
+            <span className={styles.badge}>VENDUTO</span>
           ) : (
-            <span className="badge">NUOVO</span>
+            <span className={styles.badge}>NUOVO</span>
           )}
         </div>
       ) : (
@@ -93,42 +85,47 @@ export default function ListingCard({
         //        ASTA
         // ============================
         <>
-          <div className="row" style={{ justifyContent: "space-between" }}>
+          <div className={styles.row}>
             <strong>Offerta attuale:</strong>
             <strong>{formatEther(F.highestBid)} ETH</strong>
           </div>
 
-          <div className="row" style={{ marginTop: 4 }}>
+          <div className={styles.row}>
             {!auctionExpired ? (
-              <span className="badge green">Termina in {timeLeft}</span>
+              <span className={styles.active}>Termina in {timeLeft}</span>
             ) : (
-              <span className="badge red">Asta terminata</span>
+              <span className={styles.terminated}>Asta terminata</span>
             )}
           </div>
         </>
       )}
 
       {/* BOTTONI */}
-      <div
-        className="row"
-        style={{ marginTop: 10, flexDirection: "column", gap: "8px" }}
-      >
+      <div className={styles.row}>
         {/* ---------------- VENDITA DIRETTA ---------------- */}
         {!isAuction && (
           <>
             {!isSold && !isSeller && (
-              <button className="btn" onClick={() => onBuy(F.id, F.price)}>
+              <button
+                className={styles.btn}
+                onClick={() => onBuy(F.id, F.price)}
+              >
                 Compra
               </button>
             )}
 
-            {isSeller && <span className="badge">Sei il venditore</span>}
+            {isSeller && <span className={styles.badge}>Sei il venditore</span>}
             {isBuyer && (
-              <span className="badge">Hai acquistato questo articolo</span>
+              <span className={styles.badge}>
+                Hai acquistato questo articolo
+              </span>
             )}
 
             {isBuyer && !F.confirmed && (
-              <button className="btn" onClick={() => onConfirmReceived(F.id)}>
+              <button
+                className={styles.btn}
+                onClick={() => onConfirmReceived(F.id)}
+              >
                 Conferma di aver ricevuto
               </button>
             )}
@@ -143,7 +140,7 @@ export default function ListingCard({
               <>
                 {!isSeller && (
                   <button
-                    className="btn"
+                    className={styles.btn}
                     onClick={() => {
                       const value = prompt("Inserisci la tua offerta in ETH:");
                       if (value) onBid(F.id, value);
@@ -153,7 +150,9 @@ export default function ListingCard({
                   </button>
                 )}
 
-                {isSeller && <span className="badge">Asta in corso</span>}
+                {isSeller && (
+                  <span className={styles.badge}>Asta in corso</span>
+                )}
               </>
             )}
 
@@ -162,27 +161,30 @@ export default function ListingCard({
               <>
                 {isSeller && (
                   <button
-                    className="btn"
+                    className={styles.btn}
                     onClick={() => onFinalizeAuction(F.id)}
                   >
                     Finalizza Asta
                   </button>
                 )}
                 {!isSeller && (
-                  <span className="badge">In attesa finalizzazione</span>
+                  <span className={styles.badge}>In attesa finalizzazione</span>
                 )}
               </>
             )}
 
             {/* FINALIZZATA - ACQUIRENTE PUÒ CONFERMARE */}
             {isFinalized && isBuyer && !F.confirmed && (
-              <button className="btn" onClick={() => onConfirmReceived(F.id)}>
+              <button
+                className={styles.btn}
+                onClick={() => onConfirmReceived(F.id)}
+              >
                 Conferma di aver ricevuto
               </button>
             )}
 
             {isFinalized && isBuyer && F.confirmed && (
-              <span className="badge">Transazione completata</span>
+              <span className={styles.badge}>Transazione completata</span>
             )}
           </>
         )}

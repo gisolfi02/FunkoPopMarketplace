@@ -68,3 +68,19 @@
   font-size: 15px;
   font-weight: 600;
 }
+
+.sell-link {
+  color: #f4b400;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.profile-link:hover {
+  color: #77a0fa;
+}
+
+.sell-link:hover {
+  color: #ffd86e;
+}

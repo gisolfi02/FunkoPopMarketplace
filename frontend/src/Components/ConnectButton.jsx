@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { getProviderAndSigner, networkOk } from "../lib/eth";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -6,7 +7,7 @@ import {
   faCircleUser,
   faArrowRightFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
-import sytles from "../styles/ConnectButton.module.css";
+import styles from "../styles/ConnectButton.module.css";
 
 library.add(faCircleUser, faArrowRightFromBracket);
 
@@ -14,6 +15,7 @@ export default function ConnectButton({ onConnected }) {
   const [account, setAccount] = useState(null);
   const [chain, setChain] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
+  const navigate = useNavigate();
 
   async function connect() {
     try {
@@ -32,6 +34,7 @@ export default function ConnectButton({ onConnected }) {
       const net = await networkOk(provider);
 
       setAccount(selectedAccount);
+      localStorage.setItem("account", selectedAccount);
       setChain(net?.chainId?.toString());
 
       onConnected({
@@ -51,36 +54,64 @@ export default function ConnectButton({ onConnected }) {
     setAccount(null);
     setChain(null);
     setShowPopup(false);
+    localStorage.removeItem("account");
+    navigate("/");
     window.location.reload();
   }
 
   useEffect(() => {
-    if (window.ethereum) {
-      window.ethereum.on("accountsChanged", () => window.location.reload());
-      window.ethereum.on("chainChanged", () => window.location.reload());
+    const saved = localStorage.getItem("account");
+    if (saved) {
+      setAccount(saved);
     }
+  }, []);
+
+  useEffect(() => {
+    if (!window.ethereum) return;
+
+    window.ethereum.on("accountsChanged", (acc) => {
+      if (acc.length === 0) {
+        setAccount(null);
+        localStorage.removeItem("account");
+      } else {
+        setAccount(acc[0]);
+        localStorage.setItem("account", acc[0]);
+      }
+    });
+
+    window.ethereum.on("chainChanged", () => {
+      setChain(null);
+    });
+
+    return () => {
+      window.ethereum.removeAllListeners("accountsChanged");
+      window.ethereum.removeAllListeners("chainChanged");
+    };
   }, []);
 
   return (
     <div>
-      <button className={sytles.btn} onClick={() => setShowPopup(!showPopup)}>
+      <button className={styles.btn} onClick={() => setShowPopup(!showPopup)}>
         <FontAwesomeIcon icon={["fas", "circle-user"]} />
       </button>
 
       {showPopup && !account && (
-        <div className={sytles["popup-container"]}>
-          <button onClick={connect} className={sytles["connect-btn"]}>
+        <div className={styles["popup-container"]}>
+          <button onClick={connect} className={styles["connect-btn"]}>
             Accedi con MetaMask
           </button>
         </div>
       )}
 
       {showPopup && account && (
-        <div className={sytles["popup-container"]}>
-          <a className={sytles["profile-link"]} href="/profile">
-            TO DO
+        <div className={styles["popup-container"]}>
+          <a className={styles["profile-link"]} href="/profile">
+            Vai al Profilo
           </a>
-          <button className={sytles["logout-btn"]} onClick={logout}>
+          <a className={styles["sell-link"]} href="/sell">
+            Crea Annuncio
+          </a>
+          <button className={styles["logout-btn"]} onClick={logout}>
             Logout{" "}
             <FontAwesomeIcon icon={["fas", "arrow-right-from-bracket"]} />
           </button>

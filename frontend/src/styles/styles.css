@@ -2,7 +2,6 @@
   font-family: ui-sans-serif, system-ui;
 }
 
-
 body {
   margin: 0;
   background: #f6f6f6;
@@ -11,13 +10,6 @@ body {
 
 a {
   color: #a0cfff;
-}
-
-.card {
-  background: #111823;
-  border: 1px solid #1f2a3a;
-  border-radius: 16px;
-  padding: 16px;
 }
 
 .input,

@@ -1,0 +1,48 @@
+footer {
+  height: 10em;
+  display: flex;
+  background-color: #0f4b68;
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.contactContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.infoContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.socialContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.h2Footer {
+  margin: 10px;
+  color: #f6f6f6;
+}
+
+.pFooter {
+  margin: 6px;
+  color: #f6f6f6;
+  font-weight: 500;
+}
+
+a {
+  margin: 0px 5.5px;
+}
+
+.socialIcons :hover {
+  color: #ff9e48;
+}
