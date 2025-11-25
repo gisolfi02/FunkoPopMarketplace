@@ -322,9 +322,8 @@ export default function SellForm({ onCreated }) {
       setBusy(true);
       const cidUrl = await uploadToLighthouse(file); // ottieni ipfs://CID
       set("image", cidUrl);
-      alert("Immagine caricata su Lighthouse!");
     } catch (e) {
-      alert(e.message);
+      console.log(e.message);
     } finally {
       setBusy(false);
     }
@@ -353,7 +352,7 @@ export default function SellForm({ onCreated }) {
         );
 
         await tx.wait();
-        onCreated?.();
+        onCreated?.("Annuncio creato con successo!");
       } else {
         const durationSeconds = Number(form.auctionDuration) * 60;
 
@@ -369,10 +368,10 @@ export default function SellForm({ onCreated }) {
         );
 
         await tx.wait();
-        onCreated?.();
+        onCreated?.("Annuncio creato con successo!");
       }
     } catch (e) {
-      alert(e.message);
+      console.log(e.message);
     } finally {
       setBusy(false);
     }

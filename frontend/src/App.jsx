@@ -13,6 +13,7 @@ export default function App() {
   const [viewMode, setViewMode] = useState("sale"); // "sale" | "auction"
   const [search, setSearch] = useState("");
   const [successVisible, setSuccessVisible] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
   const [fadeOut, setFadeOut] = useState(false);
   const navigate = useNavigate();
 
@@ -28,7 +29,8 @@ export default function App() {
     }
   }, []);
 
-  function notifySuccess() {
+  function notifySuccess(message) {
+    setSuccessMessage(message);
     setSuccessVisible(true);
     setFadeOut(false);
 
@@ -60,7 +62,7 @@ export default function App() {
             height={300}
             className={styles.imgSuccess}
           />
-          <h2>Annuncio creato con successo!</h2>
+          <h2>{successMessage}</h2>
         </div>
       )}
 
@@ -93,6 +95,7 @@ export default function App() {
                 account={session?.account}
                 mode={viewMode}
                 search={search}
+                onSuccess={notifySuccess}
               />
             </>
           }

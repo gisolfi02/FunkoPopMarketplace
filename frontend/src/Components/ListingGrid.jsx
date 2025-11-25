@@ -4,7 +4,7 @@ import { getContract } from "../lib/eth";
 import styles from "../styles/ListingGrid.module.css";
 import sadFace from "../img/sad.png";
 
-export default function ListingGrid({ account, mode, search }) {
+export default function ListingGrid({ account, mode, search, onSuccess }) {
   const [items, setItems] = useState([]);
 
   async function fetchListings() {
@@ -39,7 +39,7 @@ export default function ListingGrid({ account, mode, search }) {
 
       setItems(filtered);
     } catch (e) {
-      alert(e.message);
+      console.log(e.message);
     }
   }
 
@@ -56,9 +56,9 @@ export default function ListingGrid({ account, mode, search }) {
       const tx = await c.buyFunko(id, { value: priceWei });
       await tx.wait();
       await fetchListings();
-      alert("Acquisto effettuato!");
+      onSuccess?.("Acquisto effettuato!");
     } catch (e) {
-      alert(e.message);
+      console.log(e.message);
     }
   }
 
@@ -74,9 +74,9 @@ export default function ListingGrid({ account, mode, search }) {
       const tx = await c.placeBid(id, { value: amountWei });
       await tx.wait();
       await fetchListings();
-      alert("Offerta inviata!");
+      onSuccess?.("Offerta inviata!");
     } catch (e) {
-      alert(e.message);
+      console.log(e.message);
     }
   }
 
@@ -90,9 +90,9 @@ export default function ListingGrid({ account, mode, search }) {
       const tx = await c.finalizeAuction(id);
       await tx.wait();
       await fetchListings();
-      alert("Asta finalizzata!");
+      onSuccess?.("Asta finalizzata!");
     } catch (e) {
-      alert(e.message);
+      console.log(e.message);
     }
   }
 
@@ -108,9 +108,9 @@ export default function ListingGrid({ account, mode, search }) {
 
       await tx.wait();
       await fetchListings();
-      alert("Ricezione confermata!");
+      onSuccess?.("Ricezione confermata!");
     } catch (e) {
-      alert(e.message);
+      console.log(e.message);
     }
   }
 
