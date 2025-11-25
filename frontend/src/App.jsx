@@ -2,14 +2,19 @@ import React, { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import Header from "./Components/Header";
 import Footer from "./Components/Footer";
+import { useNavigate } from "react-router-dom";
 import ListingGrid from "./Components/ListingGrid";
 import SellForm from "./Components/SellForm";
 import styles from "./styles/App.module.css";
+import happyFace from "./img/happy.png";
 
 export default function App() {
   const [session, setSession] = useState(null); // { provider, signer, account, chainId }
   const [viewMode, setViewMode] = useState("sale"); // "sale" | "auction"
   const [search, setSearch] = useState("");
+  const [successVisible, setSuccessVisible] = useState(false);
+  const [fadeOut, setFadeOut] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const saved = localStorage.getItem("account");
@@ -23,10 +28,41 @@ export default function App() {
     }
   }, []);
 
+  function notifySuccess() {
+    setSuccessVisible(true);
+    setFadeOut(false);
+
+    navigate("/");
+
+    setTimeout(() => {
+      setFadeOut(true);
+    }, 2000);
+
+    setTimeout(() => {
+      setSuccessVisible(false);
+    }, 2400);
+  }
+
   return (
     <div className="container">
       {/* Header sempre presente */}
       <Header setSession={setSession} onSearch={setSearch} />
+
+      {successVisible && (
+        <div
+          className={`${styles["success-popup"]} ${
+            fadeOut ? styles["fade-out"] : ""
+          }`}
+        >
+          <img
+            src={happyFace}
+            alt="Success"
+            height={300}
+            className={styles.imgSuccess}
+          />
+          <h2>Annuncio creato con successo!</h2>
+        </div>
+      )}
 
       {/* Rotte del sito */}
       <Routes>
@@ -63,7 +99,12 @@ export default function App() {
         />
 
         {/* ---------------- PAGINA CREA ANNUNCIO ---------------- */}
-        <Route path="/sell" element={<SellForm account={session?.account} />} />
+        <Route
+          path="/sell"
+          element={
+            <SellForm account={session?.account} onCreated={notifySuccess} />
+          }
+        />
 
         {/* ---------------- PAGINA PROFILO ---------------- */}
         <Route

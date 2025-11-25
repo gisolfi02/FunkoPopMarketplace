@@ -354,7 +354,6 @@ export default function SellForm({ onCreated }) {
 
         await tx.wait();
         onCreated?.();
-        alert("Funko messo in vendita!");
       } else {
         const durationSeconds = Number(form.auctionDuration) * 60;
 
@@ -371,7 +370,6 @@ export default function SellForm({ onCreated }) {
 
         await tx.wait();
         onCreated?.();
-        alert("Asta creata con successo!");
       }
     } catch (e) {
       alert(e.message);
@@ -450,51 +448,142 @@ export default function SellForm({ onCreated }) {
       />
 
       <div className={styles.row}>
-          <input id="fileUpload" type="file" accept="image/*" 
-           onChange={e => {setFile(e.target.files[0]);}} className={styles.nascondere}/>
-          <label htmlFor="fileUpload" className={styles.btn}>Seleziona immagine</label>
-          <span className={styles.nomeFile}>{file ? file.name : "Nessun file selezionato"}</span>
+        <input
+          id="fileUpload"
+          type="file"
+          accept="image/*"
+          onChange={(e) => {
+            setFile(e.target.files[0]);
+          }}
+          className={styles.nascondere}
+        />
+        <label htmlFor="fileUpload" className={styles.btn}>
+          Seleziona immagine
+        </label>
+        <span className={styles.nomeFile}>
+          {file ? file.name : "Nessun file selezionato"}
+        </span>
 
-          <button type="button" className={styles.btn} disabled={!file || busy} onClick={handleUpload}>Carica su IPFS (Lighthouse)</button>
+        <button
+          type="button"
+          className={styles.btn}
+          disabled={!file || busy}
+          onClick={handleUpload}
+        >
+          Carica su IPFS (Lighthouse)
+        </button>
       </div>
 
       {/*Selezione tipologia di vendita*/}
       <div className={styles.row}>
-        <div className={styles.sceltaWrap} role="radiogroup" aria-label="Modalità vendita">
-          <label className={`${styles.scelta} ${!form.isAuction ? styles.sceltaAttivo : ''}`} onClick={() => set('isAuction', false)}>
-              <input type="radio" name="mode" checked={!form.isAuction} readOnly />
-              <svg className={styles.iconeScelta} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+        <div
+          className={styles.sceltaWrap}
+          role="radiogroup"
+          aria-label="Modalità vendita"
+        >
+          <label
+            className={`${styles.scelta} ${
+              !form.isAuction ? styles.sceltaAttivo : ""
+            }`}
+            onClick={() => set("isAuction", false)}
+          >
+            <input
+              type="radio"
+              name="mode"
+              checked={!form.isAuction}
+              readOnly
+            />
+            <svg
+              className={styles.iconeScelta}
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="8" cy="21" r="1" />
+              <circle cx="19" cy="21" r="1" />
+              <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
+            </svg>
             <span className={styles.sceltaLabel}>Vendita</span>
           </label>
 
-          <label className={`${styles.scelta} ${form.isAuction ? styles.sceltaAttivo : ''}`} onClick={() => set('isAuction', true)}>
+          <label
+            className={`${styles.scelta} ${
+              form.isAuction ? styles.sceltaAttivo : ""
+            }`}
+            onClick={() => set("isAuction", true)}
+          >
             <input type="radio" name="mode" checked={form.isAuction} readOnly />
-            <svg className={styles.iconeScelta} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m14 13-8.381 8.38a1 1 0 0 1-3.001-3l8.384-8.381"/><path d="m16 16 6-6"/><path d="m21.5 10.5-8-8"/><path d="m8 8 6-6"/><path d="m8.5 7.5 8 8"/></svg>
+            <svg
+              className={styles.iconeScelta}
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="m14 13-8.381 8.38a1 1 0 0 1-3.001-3l8.384-8.381" />
+              <path d="m16 16 6-6" />
+              <path d="m21.5 10.5-8-8" />
+              <path d="m8 8 6-6" />
+              <path d="m8.5 7.5 8 8" />
+            </svg>
             <span className={styles.sceltaLabel}>Asta</span>
           </label>
         </div>
       </div>
 
-      <div className={styles.folder}> 
-      
-      {/* Se VENDITA NORMALE */}
-      {!form.isAuction && (
-        <div>
-          <input className={styles.input} placeholder="Prezzo (ETH)" value={form.price} onChange={e => set("price", e.target.value)} required/>
-          <button className={styles.btn} disabled={busy}>Crea annuncio</button>
-        </div>
-      )}
-      {/* Se ASTA */}
-      {form.isAuction && (
-        <div>
-          <input className={styles.input} placeholder="Prezzo di partenza (ETH)" value={form.price} onChange={e => set("price", e.target.value)} required/>
-          <input className={styles.input} placeholder="Durata asta (minuti)" type="number" value={form.auctionDuration} onChange={e => set("auctionDuration", e.target.value)} required/>
-          <button className={styles.btn} disabled={busy}>Crea annuncio</button>
-        </div>
-      )}
+      <div className={styles.folder}>
+        {/* Se VENDITA NORMALE */}
+        {!form.isAuction && (
+          <div>
+            <input
+              className={styles.input}
+              placeholder="Prezzo (ETH)"
+              value={form.price}
+              onChange={(e) => set("price", e.target.value)}
+              required
+            />
+            <button className={styles.btn} disabled={busy}>
+              Crea annuncio
+            </button>
+          </div>
+        )}
+        {/* Se ASTA */}
+        {form.isAuction && (
+          <div>
+            <input
+              className={styles.input}
+              placeholder="Prezzo di partenza (ETH)"
+              value={form.price}
+              onChange={(e) => set("price", e.target.value)}
+              required
+            />
+            <input
+              className={styles.input}
+              placeholder="Durata asta (minuti)"
+              type="number"
+              value={form.auctionDuration}
+              onChange={(e) => set("auctionDuration", e.target.value)}
+              required
+            />
+            <button className={styles.btn} disabled={busy}>
+              Crea annuncio
+            </button>
+          </div>
+        )}
       </div>
-
-      
     </form>
   );
 }
