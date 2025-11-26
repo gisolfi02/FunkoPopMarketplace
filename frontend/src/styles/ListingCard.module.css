@@ -6,7 +6,7 @@
   margin: 24px 12px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;  
+  justify-content: space-between;
   height: 100%;
   position: relative;
 }
@@ -18,13 +18,21 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  flex-grow: 1; 
+  flex-grow: 1;
 }
 
 .row {
   display: flex;
   gap: 8px;
-  align-items: center; 
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: column; /* Aggiunto per colonna, se necessario */
+}
+
+.infoRow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
   justify-content: space-between;
 }
 
@@ -38,19 +46,19 @@
   font-size: 12px;
 }
 
-.owner{
+.owner {
   background: #f1cbaa;
   color: #082308;
   padding: 4px 28px;
   border-radius: 8px;
   font-weight: 700;
   font-size: 12px;
-  backdrop-filter: blur(5px); 
+  backdrop-filter: blur(5px);
   transition: backdrop-filter 0.3s ease, background 0.3s ease;
-  margin-bottom: 8px; 
+  margin-bottom: 8px;
 }
 
-.price{
+.price {
   color: #cdd8e3;
   font-weight: 800;
 }
@@ -77,17 +85,14 @@
   margin-top: auto;
 }
 
-
-.btn:hover{
+.btn:hover {
   background: #da6c0c;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); 
-  transform: translateY(-4px); 
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  transform: translateY(-4px);
 }
 
-
-
 .compra {
-  align-self: center;  
+  align-self: center;
   padding: 12px 20px;
   background: #ff9e48;
   border-radius: 10px;
@@ -98,15 +103,12 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease;
   border: none;
-  margin-left: 44px;
-
 }
 
-
 .compra:hover {
-  background: #66a3ff; 
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); 
-  transform: translateY(-4px); 
+  background: #66a3ff;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  transform: translateY(-4px);
 }
 
 .img {
@@ -115,7 +117,6 @@
   aspect-ratio: 3/3;
   object-fit: cover;
 }
-
 
 .h3 {
   margin: 6px 0 4px 0;
@@ -129,13 +130,25 @@
   margin: 0 0 6px 0;
 }
 
-.ownerContainer{
+.ownerContainer {
   display: flex;
-  flex-direction: column; 
-  align-items: center; 
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  margin-top: 8px; 
-  gap: 10px; 
-  width: 100%; 
+  margin-top: 8px;
+  gap: 10px;
+  width: 100%;
 }
 
+.badge-center {
+  display: block;
+  text-align: center;
+  margin-bottom: 10px;
+  background: #e6edf3;
+  color: #082308;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-weight: 700;
+  margin: 2px;
+  font-size: 12px;
+}

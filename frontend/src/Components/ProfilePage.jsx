@@ -92,6 +92,22 @@ export default function ProfilePage({ account }) {
     }
   }
 
+  async function handleDelete(id) {
+    try {
+      const { BrowserProvider } = await import("ethers");
+      const provider = new BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const c = await getContract(signer);
+
+      const tx = await c.deleteFunko(id);
+      await tx.wait();
+      await fetchListings();
+      onSuccess?.("Annuncio eliminato!");
+    } catch (e) {
+      console.log(e.message);
+    }
+  }
+
   useEffect(() => {
     fetchProfileData();
   }, [account]);
@@ -107,6 +123,7 @@ export default function ProfilePage({ account }) {
               F={F}
               me={account}
               onFinalizeAuction={handleFinalizeAuction}
+              onDelete={handleDelete}
             />
           ))
         ) : (
