@@ -114,6 +114,22 @@ export default function ListingGrid({ account, mode, search, onSuccess }) {
     }
   }
 
+  async function handleDelete(id) {
+    try {
+      const { BrowserProvider } = await import("ethers");
+      const provider = new BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const c = await getContract(signer);
+
+      const tx = await c.deleteFunko(id);
+      await tx.wait();
+      await fetchListings();
+      onSuccess?.("Annuncio eliminato!");
+    } catch (e) {
+      console.log(e.message);
+    }
+  }
+
   if (!items.length)
     return (
       <div className={styles.info}>
@@ -133,6 +149,7 @@ export default function ListingGrid({ account, mode, search, onSuccess }) {
           onBid={handleBid}
           onFinalizeAuction={handleFinalizeAuction}
           onConfirmReceived={handleConfirmReceived}
+          onDelete={handleDelete}
         />
       ))}
     </div>

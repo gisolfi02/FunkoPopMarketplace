@@ -1,23 +1,112 @@
 .card {
-  background: #111823;
+  background: #042c47;
   border: 1px solid #1f2a3a;
-  border-radius: 16px;
-  padding: 16px;
+  border-radius: 20px;
+  padding: 24px 32px 24px 32px;
+  margin: 24px 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;  
+  height: 100%;
+  position: relative;
+}
+.card > * {
+  flex-grow: 0;
+}
+
+.card .content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-grow: 1; 
 }
 
 .row {
+  display: flex;
+  gap: 8px;
+  align-items: center; 
+  justify-content: space-between;
 }
 
 .badge {
+  background: #e6edf3;
+  color: #082308;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-weight: 700;
+  margin: 2px;
+  font-size: 12px;
+}
+
+.owner{
+  background: #f1cbaa;
+  color: #082308;
+  padding: 4px 28px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 12px;
+  backdrop-filter: blur(5px); 
+  transition: backdrop-filter 0.3s ease, background 0.3s ease;
+  margin-bottom: 8px; 
+}
+
+.price{
+  color: #cdd8e3;
+  font-weight: 800;
 }
 
 .active {
+  color: #66a3ff;
 }
 
 .terminated {
+  color: #ff9e48;
 }
 
 .btn {
+  display: flex;
+  justify-content: center;
+  width: auto;
+  padding: 8px 12px;
+  background: #ff9e48;
+  border: none;
+  border-radius: 10px;
+  color: #082308;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: auto;
+}
+
+
+.btn:hover{
+  background: #da6c0c;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); 
+  transform: translateY(-4px); 
+}
+
+
+
+.compra {
+  align-self: center;  
+  padding: 12px 20px;
+  background: #ff9e48;
+  border-radius: 10px;
+  color: #082308;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  border: none;
+  margin-left: 44px;
+
+}
+
+
+.compra:hover {
+  background: #66a3ff; 
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); 
+  transform: translateY(-4px); 
 }
 
 .img {
@@ -27,8 +116,26 @@
   object-fit: cover;
 }
 
-.p {
-}
 
 .h3 {
+  margin: 6px 0 4px 0;
+  font-size: 18px;
+  color: #ffffff;
 }
+
+.p {
+  color: #cdd8e3;
+  font-size: 13px;
+  margin: 0 0 6px 0;
+}
+
+.ownerContainer{
+  display: flex;
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: center;
+  margin-top: 8px; 
+  gap: 10px; 
+  width: 100%; 
+}
+
