@@ -10,6 +10,7 @@ export default function ListingCard({
   onBid,
   onFinalizeAuction,
   onConfirmReceived,
+  onDelete,
 }) {
   const [timeLeft, setTimeLeft] = useState("");
 
@@ -58,6 +59,7 @@ export default function ListingCard({
 
   return (
     <div className={styles.card}>
+      <div className={styles.content}>
       {/* IMMAGINE */}
       <img src={img} alt={F.nameFunko} className={styles.img} />
 
@@ -73,7 +75,7 @@ export default function ListingCard({
         //        VENDITA DIRETTA
         // ============================
         <div className={styles.row}>
-          <strong>{formatEther(F.price)} ETH</strong>
+          <strong className={styles.price}>{formatEther(F.price)} ETH</strong>
           {isSold ? (
             <span className={styles.badge}>VENDUTO</span>
           ) : (
@@ -87,7 +89,7 @@ export default function ListingCard({
         <>
           <div className={styles.row}>
             <strong>Offerta attuale:</strong>
-            <strong>{formatEther(F.highestBid)} ETH</strong>
+            <strong className={styles.price}>{formatEther(F.highestBid)} ETH</strong>
           </div>
 
           <div className={styles.row}>
@@ -107,14 +109,34 @@ export default function ListingCard({
           <>
             {!isSold && !isSeller && (
               <button
-                className={styles.btn}
+                className={styles.compra}
                 onClick={() => onBuy(F.id, F.price)}
               >
                 Compra
               </button>
             )}
+            <div className={styles.ownerContainer}>
 
-            {isSeller && <span className={styles.badge}>Sei il venditore</span>}
+            
+            {isSeller && <span className={styles.owner}>Sei il venditore</span>}
+            {isSeller && !isSold && (
+              <button
+                className={styles.btn}
+                onClick={() => {
+                  if (
+                    confirm(
+                      'Sei sicuro di voler eliminare questo annuncio? Questa operazione non è reversibile.'
+                    )
+                  ) {
+                    onDelete?.(F.id);
+                  }
+                }}
+              >
+                Elimina annuncio
+              </button>
+              
+            )}
+            </div>
             {isBuyer && (
               <span className={styles.badge}>
                 Hai acquistato questo articolo
@@ -189,6 +211,7 @@ export default function ListingCard({
           </>
         )}
       </div>
+    </div>
     </div>
   );
 }
