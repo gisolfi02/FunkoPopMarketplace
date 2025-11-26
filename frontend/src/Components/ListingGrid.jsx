@@ -104,7 +104,7 @@ export default function ListingGrid({ account, mode, search, onSuccess }) {
       const c = await getContract(signer);
 
       let tx;
-      tx = await c.confirmReceived(id);
+      tx = await c.confirmRecived(id);
 
       await tx.wait();
       await fetchListings();

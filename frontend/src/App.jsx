@@ -5,6 +5,7 @@ import Footer from "./Components/Footer";
 import { useNavigate } from "react-router-dom";
 import ListingGrid from "./Components/ListingGrid";
 import SellForm from "./Components/SellForm";
+import ProfilePage from "./Components/ProfilePage";
 import styles from "./styles/App.module.css";
 import happyFace from "./img/happy.png";
 
@@ -112,9 +113,7 @@ export default function App() {
         {/* ---------------- PAGINA PROFILO ---------------- */}
         <Route
           path="/profile"
-          element={
-            <div style={{ padding: 40 }}>Pagina profilo in arrivo...</div>
-          }
+          element={<ProfilePage account={session?.account} />}
         />
       </Routes>
 
