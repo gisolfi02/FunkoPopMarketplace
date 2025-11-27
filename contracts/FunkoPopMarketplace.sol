@@ -119,7 +119,7 @@ contract FunkoPopMarketplace {
         FunkoPop storage item = funkos[_id];
 
         require(item.isAuction);
-        require(block.timestamp> item.auctionEndTime);
+        require(block.timestamp < item.auctionEndTime);
         require(msg.value > item.highestBid);
 
         if(item.highestBidder != address(0)){
