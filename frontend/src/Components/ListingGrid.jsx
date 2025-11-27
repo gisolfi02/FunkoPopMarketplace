@@ -16,7 +16,6 @@ export default function ListingGrid({ account, mode, search, onSuccess }) {
       const n = await c.funkoCount();
       const max = Number(n);
       const acc = [];
-      // Leggiamo direttamente il mapping pubblico `funkos(id)`
       for (let id = 1; id <= max; id++) {
         try {
           const F = await c.funkos(id);
@@ -24,7 +23,7 @@ export default function ListingGrid({ account, mode, search, onSuccess }) {
 
           if (mode === "sale" && F.isAuction) continue;
           if (mode === "auction" && !F.isAuction) continue;
-
+          console.log("Fetched Funko:", F);
           acc.push(F);
         } catch {}
       }
@@ -90,9 +89,19 @@ export default function ListingGrid({ account, mode, search, onSuccess }) {
       const tx = await c.finalizeAuction(id);
       await tx.wait();
       await fetchListings();
-      onSuccess?.("Asta finalizzata!");
+      onSuccess?.("Asta finalizzata con successo!");
     } catch (e) {
-      console.log(e.message);
+      console.error("Errore durante la finalizzazione dell'asta:", e.message);
+
+      // Se il contratto restituisce un errore revert, mostriamo il messaggio
+      if (e.code === "CALL_EXCEPTION") {
+        console.error("Revert della transazione:", e.data);
+        alert(
+          "Impossibile finalizzare l'asta. Verifica che l'asta sia terminata o già finalizzata."
+        );
+      } else {
+        alert("Si è verificato un errore durante la finalizzazione.");
+      }
     }
   }
 
@@ -116,6 +125,7 @@ export default function ListingGrid({ account, mode, search, onSuccess }) {
 
   async function handleDelete(id) {
     try {
+      console.log("Deleting item with id:", id);
       const { BrowserProvider } = await import("ethers");
       const provider = new BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();

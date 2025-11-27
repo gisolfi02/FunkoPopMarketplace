@@ -47,7 +47,7 @@ export default function App() {
   }
 
   return (
-    <div className="container">
+    <div className={styles.container}>
       {/* Header sempre presente */}
       <Header setSession={setSession} onSearch={setSearch} />
 

@@ -27,12 +27,12 @@ contract FunkoPopMarketplace {
     mapping(uint => FunkoPop) public funkos;
 
     modifier onlyBuyer(uint _id){
-        require(funkos[_id].buyer == msg.sender);
+        require(funkos[_id].buyer == msg.sender, "Solo l'acquirente puo' confermare la ricezione");
         _;
     }
 
     modifier onlySeller(uint _id){
-        require(funkos[_id].seller==msg.sender);
+        require(funkos[_id].seller==msg.sender, "Solo il venditore puo' eliminare l'oggetto");
         _;
     }
 
@@ -47,8 +47,8 @@ contract FunkoPopMarketplace {
 
 
     function createFunko(string memory _nameFunko, string memory _nameCharacter, string memory _image, string memory _category, string memory _license, string memory _boxNumber, uint _price) external {
-        require(_price > 0);
-
+        require(_price > 0, "Il prezzo deve essere maggiore di zero");
+        funkoCount++;
         funkos[funkoCount] = FunkoPop({
             id: funkoCount,
             nameFunko : _nameFunko,
@@ -67,11 +67,10 @@ contract FunkoPopMarketplace {
         });
 
         emit Added(funkoCount, msg.sender, _nameFunko, _price);
-        funkoCount++;
     }
 
     function deleteFunko(uint _id) external onlySeller(_id){
-        require(!funkos[_id].sold && !funkos[_id].isAuction);
+        require(!funkos[_id].sold && !funkos[_id].isAuction, "Non e' possibile eliminare un oggetto venduto o in asta");
 
         delete funkos[_id];
     }
@@ -79,10 +78,10 @@ contract FunkoPopMarketplace {
     function buyFunko(uint _id) external payable{
         FunkoPop storage item = funkos[_id];
 
-        require(!item.sold);
-        require(!item.isAuction);
-        require(msg.value==item.price);
-        require(msg.sender != item.seller);
+        require(!item.sold, "L'oggetto e' gia' stato venduto");
+        require(!item.isAuction, "Questo oggetto e' in asta");
+        require(msg.value==item.price, "Importo inviato non corrispondente al prezzo dell'oggetto");
+        require(msg.sender != item.seller, "Il venditore non puo' acquistare il proprio oggetto");
 
         item.buyer = payable(msg.sender);
         item.sold = true;
@@ -92,7 +91,8 @@ contract FunkoPopMarketplace {
 
 
     function createAuction(string memory _nameFunko, string memory _nameCharacter, string memory _image, string memory _category, string memory _license, string memory _boxNumber, uint _startingPrice, uint _duration) external {
-        require(_startingPrice > 0);
+        require(_startingPrice > 0, "Il prezzo di partenza deve essere maggiore di zero");
+        funkoCount++;
 
         funkos[funkoCount] = FunkoPop({
             id: funkoCount,
@@ -110,21 +110,19 @@ contract FunkoPopMarketplace {
             highestBid: _startingPrice,
             finalized: false
         });
-
+        
         emit Auction(funkoCount, msg.sender, _startingPrice, block.timestamp + _duration, _nameFunko);
-        funkoCount++;
     }
 
     function placeBid(uint _id) external payable{
         FunkoPop storage item = funkos[_id];
 
-        require(item.isAuction);
-        require(block.timestamp < item.auctionEndTime);
-        require(msg.value > item.highestBid);
+        require(item.isAuction, "Questo non e' un oggetto in asta");
+        require(msg.value > item.highestBid, "Offerta troppo bassa");
 
         if(item.highestBidder != address(0)){
             (bool refunded,) = item.highestBidder.call{value: item.highestBid}("");
-            require(refunded);
+            require(refunded, "Rimborso al precedente offerente fallito");
         }
 
         item.highestBidder = payable(msg.sender);
@@ -137,9 +135,8 @@ contract FunkoPopMarketplace {
     function finalizeAuction(uint _id) external { 
         FunkoPop storage item = funkos[_id];
 
-        require(item.isAuction);
-        require(block.timestamp >= item.auctionEndTime);
-        require(!item.finalized);
+        require(item.isAuction, "Questo non e' un oggetto in asta");
+        require(!item.finalized, "L'asta e' gia' stata finalizzata");
 
         item.finalized = true;
 
@@ -159,13 +156,13 @@ contract FunkoPopMarketplace {
     function confirmRecived(uint _id) external onlyBuyer(_id){
         FunkoPop storage item = funkos[_id];
 
-        require(item.sold);
-        require(!item.confirmed);
+        require(item.sold, "L'oggetto non e' stato venduto");
+        require(!item.confirmed, "La vendita e' gia' stata confermata");
 
         item.confirmed = true;
 
         (bool sent, ) = item.seller.call{value: item.price}("");
-        require(sent);
+        require(sent, "Pagamento al venditore fallito");
 
 
         emit Confirmed(_id, item.seller);

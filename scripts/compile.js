@@ -124,7 +124,7 @@ function updateEnvContractAddress(envFilePath, newAddress) {
   const line = `VITE_CONTRACT_ADDRESS=${newAddress}`;
   if (/^VITE_CONTRACT_ADDRESS=/m.test(content)) {
     // Sostituisci la riga esistente
-    content = content.replace(/^VITE_CONTRACT_ADDRESS=.*$/m, line);
+    content = content.replace(/^VITE_CONTRACT_ADDRESS=.*$/m, line) + "\n";
   } else {
     // Aggiungi la variabile in fondo al file (crea newline se necessario)
     if (content.length && !content.endsWith("\n")) content += "\n";

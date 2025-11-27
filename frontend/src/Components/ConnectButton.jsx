@@ -6,10 +6,12 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import {
   faCircleUser,
   faArrowRightFromBracket,
+  faCirclePlus,
 } from "@fortawesome/free-solid-svg-icons";
+import { faAddressCard } from "@fortawesome/free-regular-svg-icons";
 import styles from "../styles/ConnectButton.module.css";
 
-library.add(faCircleUser, faArrowRightFromBracket);
+library.add(faCircleUser, faArrowRightFromBracket, faAddressCard, faCirclePlus);
 
 export default function ConnectButton({ onConnected }) {
   const [account, setAccount] = useState(null);
@@ -107,13 +109,25 @@ export default function ConnectButton({ onConnected }) {
         <div className={styles["popup-container"]}>
           <a className={styles["profile-link"]} href="/profile">
             Vai al Profilo
+            <FontAwesomeIcon
+              icon={["far", "address-card"]}
+              size="lg"
+              style={{ marginLeft: "5px" }}
+            />
           </a>
           <a className={styles["sell-link"]} href="/sell">
             Crea Annuncio
+            <FontAwesomeIcon
+              icon={["fas", "circle-plus"]}
+              style={{ marginLeft: "5px" }}
+            />
           </a>
           <button className={styles["logout-btn"]} onClick={logout}>
-            Logout{" "}
-            <FontAwesomeIcon icon={["fas", "arrow-right-from-bracket"]} />
+            Logout
+            <FontAwesomeIcon
+              icon={["fas", "arrow-right-from-bracket"]}
+              style={{ marginLeft: "5px" }}
+            />
           </button>
         </div>
       )}
