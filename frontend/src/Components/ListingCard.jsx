@@ -14,6 +14,8 @@ export default function ListingCard({
 }) {
   const [timeLeft, setTimeLeft] = useState("");
 
+  const [deletePopupVisible, setDeletePopupVisible] = useState(false);
+
   const isSeller = me && F.seller?.toLowerCase() === me.toLowerCase();
   const isBuyer = me && F.buyer?.toLowerCase() === me.toLowerCase();
   const img =
@@ -125,13 +127,7 @@ export default function ListingCard({
                   <button
                     className={styles.btn}
                     onClick={() => {
-                      if (
-                        confirm(
-                          "Sei sicuro di voler eliminare questo annuncio? Questa operazione non è reversibile."
-                        )
-                      ) {
-                        onDelete?.(F.id);
-                      }
+                      setDeletePopupVisible(true);
                     }}
                   >
                     Elimina annuncio
@@ -218,6 +214,31 @@ export default function ListingCard({
           )}
         </div>
       </div>
+
+      {/* POPUP ELIMINA ANNUNCIO */}
+      {deletePopupVisible && (
+        <div className={styles.deletePopUp}>
+          <h3>Sei sicuro di voler eliminare questo annuncio? </h3>
+          <p>Questa operazione non è reversibile.</p>
+          <div className={styles.buttonGroup}>
+            <button
+              className={styles.btnConfirm}
+              onClick={() => {
+                onDelete?.(F.id);
+                setDeletePopupVisible(false);
+              }}
+            >
+              Conferma
+            </button>
+            <button
+              className={styles.btnCancel}
+              onClick={() => setDeletePopupVisible(false)}
+            >
+              Annulla
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

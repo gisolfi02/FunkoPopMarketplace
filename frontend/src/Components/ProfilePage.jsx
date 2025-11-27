@@ -7,7 +7,6 @@ export default function ProfilePage({ account }) {
   const [sellingItems, setSellingItems] = useState([]);
   const [boughtItems, setBoughtItems] = useState([]);
   const [receivedItems, setReceivedItems] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   async function fetchProfileData() {
     try {

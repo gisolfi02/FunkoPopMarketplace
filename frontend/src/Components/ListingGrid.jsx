@@ -19,11 +19,10 @@ export default function ListingGrid({ account, mode, search, onSuccess }) {
       for (let id = 1; id <= max; id++) {
         try {
           const F = await c.funkos(id);
-          if (!F || !F.id || Number(F.id) === 0) continue;
+          if (!F || F.id === undefined || F.id === null) continue;
 
           if (mode === "sale" && F.isAuction) continue;
           if (mode === "auction" && !F.isAuction) continue;
-          console.log("Fetched Funko:", F);
           acc.push(F);
         } catch {}
       }
