@@ -138,6 +138,7 @@ export default function ListingCard({
               
             )}
             </div>
+
             {isBuyer && (
               <span className={styles.badge}>
                 Hai acquistato questo articolo
