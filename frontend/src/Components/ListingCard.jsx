@@ -14,6 +14,8 @@ export default function ListingCard({
 }) {
   const [timeLeft, setTimeLeft] = useState("");
 
+  const [deletePopupVisible, setDeletePopupVisible] = useState(false);
+
   const isSeller = me && F.seller?.toLowerCase() === me.toLowerCase();
   const isBuyer = me && F.buyer?.toLowerCase() === me.toLowerCase();
   const img =
@@ -60,160 +62,185 @@ export default function ListingCard({
   return (
     <div className={styles.card}>
       <div className={styles.content}>
-      {/* IMMAGINE */}
-      <img src={img} alt={F.nameFunko} className={styles.img} />
+        {/* IMMAGINE */}
+        <img src={img} alt={F.nameFunko} className={styles.img} />
 
-      {/* TITOLO */}
-      <h3 className={styles.h3}>{F.nameFunko}</h3>
+        {/* TITOLO */}
+        <h3 className={styles.h3}>{F.nameFunko}</h3>
 
-      {/* DESCRIZIONE */}
-      <p className={styles.p}>{F.description}</p>
+        {/* DESCRIZIONE */}
+        <p className={styles.p}>{F.description}</p>
 
-      {/* SEZIONE PREZZI / ASTA */}
-      {!isAuction ? (
-        // ============================
-        //        VENDITA DIRETTA
-        // ============================
-        <div className={styles.row}>
-          <strong className={styles.price}>{formatEther(F.price)} ETH</strong>
-          {isSold ? (
-            <span className={styles.badge}>VENDUTO</span>
-          ) : (
-            <span className={styles.badge}>NUOVO</span>
-          )}
-        </div>
-      ) : (
-        // ============================
-        //        ASTA
-        // ============================
-        <>
-          <div className={styles.offerBox}>
-            <div className={styles.offerLabel}> OFFERTA ATTUALE</div>
-            <div className={styles.offerValue}>{formatEther(F.highestBid)} ETH</div>
+        {/* SEZIONE PREZZI / ASTA */}
+        {!isAuction ? (
+          // ============================
+          //        VENDITA DIRETTA
+          // ============================
+          <div className={styles.row}>
+            <strong className={styles.price}>{formatEther(F.price)} ETH</strong>
+            {isSold ? (
+              <span className={styles.badge}>VENDUTO</span>
+            ) : (
+              <span className={styles.badge}>NUOVO</span>
+            )}
           </div>
-
-          <div className={styles.timeLeftBox}> {!auctionExpired ? (<>
-              <div className={styles.timeLabel}>TERMINA IN</div>
-              <div className={styles.timeValue}>{timeLeft}</div>
-            </>
-          ) : (
-            <div className={styles.timeEnded}>Asta terminata</div>
-          )}
-        </div>
-        </>
-      )}
-
-      {/* BOTTONI */}
-      <div className={styles.row}>
-        {/* ---------------- VENDITA DIRETTA ---------------- */}
-        {!isAuction && (
+        ) : (
+          // ============================
+          //        ASTA
+          // ============================
           <>
-            {!isSold && !isSeller && (
-              <button
-                className={styles.compra}
-                onClick={() => onBuy(F.id, F.price)}
-              >
-                Compra
-              </button>
-            )}
-            <div className={styles.ownerContainer}>
-
-            
-            {isSeller && <span className={styles.owner}>Sei il venditore</span>}
-            {isSeller && !isSold && (
-              <button
-                className={styles.btn}
-                onClick={() => {
-                  if (
-                    confirm(
-                      'Sei sicuro di voler eliminare questo annuncio? Questa operazione non è reversibile.'
-                    )
-                  ) {
-                    onDelete?.(F.id);
-                  }
-                }}
-              >
-                Elimina annuncio
-              </button>
-              
-            )}
+            <div className={styles.offerBox}>
+              <div className={styles.offerLabel}> OFFERTA ATTUALE</div>
+              <div className={styles.offerValue}>
+                {formatEther(F.highestBid)} ETH
+              </div>
             </div>
 
-            {isBuyer && (
-              <span className={styles.badge}>
-                Hai acquistato questo articolo
-              </span>
-            )}
-
-            {isBuyer && !F.confirmed && (
-              <button
-                className={styles.btn}
-                onClick={() => onConfirmReceived(F.id)}
-              >
-                Conferma di aver ricevuto
-              </button>
-            )}
+            <div className={styles.timeLeftBox}>
+              {" "}
+              {!auctionExpired ? (
+                <>
+                  <div className={styles.timeLabel}>TERMINA IN</div>
+                  <div className={styles.timeValue}>{timeLeft}</div>
+                </>
+              ) : (
+                <div className={styles.timeEnded}>Asta terminata</div>
+              )}
+            </div>
           </>
         )}
 
-        {/* --------------------- ASTA --------------------- */}
-        {isAuction && (
-          <>
-            {/* ASTA IN CORSO */}
-            {!auctionExpired && !isFinalized && (
-              <>
-                {!isSeller && (
+        {/* BOTTONI */}
+        <div className={styles.row}>
+          {/* ---------------- VENDITA DIRETTA ---------------- */}
+          {!isAuction && (
+            <>
+              {!isSold && !isSeller && (
+                <button
+                  className={styles.compra}
+                  onClick={() => onBuy(F.id, F.price)}
+                >
+                  Compra
+                </button>
+              )}
+              <div className={styles.ownerContainer}>
+                {isSeller && (
+                  <span className={styles.owner}>Sei il venditore</span>
+                )}
+                {isSeller && !isSold && (
                   <button
                     className={styles.btn}
                     onClick={() => {
-                      const value = prompt("Inserisci la tua offerta in ETH:");
-                      if (value) onBid(F.id, value);
+                      setDeletePopupVisible(true);
                     }}
                   >
-                    Fai un'Offerta
+                    Elimina annuncio
                   </button>
                 )}
+              </div>
+              {isBuyer && (
+                <span className={styles.badge}>
+                  Hai acquistato questo articolo
+                </span>
+              )}
 
-                {isSeller && (
-                  <span className={styles.asta}>Asta in corso</span>
-                )}
-              </>
-            )}
+              {isBuyer && !F.confirmed && (
+                <button
+                  className={styles.btn}
+                  onClick={() => onConfirmReceived(F.id)}
+                >
+                  Conferma di aver ricevuto
+                </button>
+              )}
+            </>
+          )}
 
-            {/* ASTA TERMINATA MA NON FINALIZZATA */}
-            {auctionExpired && !isFinalized && (
-              <>
-                {isSeller && (
-                  <button
-                    className={styles.btn}
-                    onClick={() => onFinalizeAuction(F.id)}
-                  >
-                    Finalizza Asta
-                  </button>
-                )}
-                {!isSeller && (
-                  <span className={styles.badge}>In attesa finalizzazione</span>
-                )}
-              </>
-            )}
+          {/* --------------------- ASTA --------------------- */}
+          {isAuction && (
+            <>
+              {/* ASTA IN CORSO */}
+              {!auctionExpired && !isFinalized && (
+                <>
+                  {!isSeller && (
+                    <button
+                      className={styles.btn}
+                      onClick={() => {
+                        const value = prompt(
+                          "Inserisci la tua offerta in ETH:"
+                        );
+                        if (value) onBid(F.id, value);
+                      }}
+                    >
+                      Fai un'Offerta
+                    </button>
+                  )}
 
-            {/* FINALIZZATA - ACQUIRENTE PUÒ CONFERMARE */}
-            {isFinalized && isBuyer && !F.confirmed && (
-              <button
-                className={styles.btn}
-                onClick={() => onConfirmReceived(F.id)}
-              >
-                Conferma di aver ricevuto
-              </button>
-            )}
+                  {isSeller && (
+                    <span className={styles.asta}>Asta in corso</span>
+                  )}
+                </>
+              )}
 
-            {isFinalized && isBuyer && F.confirmed && (
-              <span className={styles.badge}>Transazione completata</span>
-            )}
-          </>
-        )}
+              {/* ASTA TERMINATA MA NON FINALIZZATA */}
+              {auctionExpired && !isFinalized && (
+                <>
+                  {isSeller && (
+                    <button
+                      className={styles.btn}
+                      onClick={() => onFinalizeAuction(F.id)}
+                    >
+                      Finalizza Asta
+                    </button>
+                  )}
+                  {!isSeller && (
+                    <span className={styles.badge}>
+                      In attesa finalizzazione
+                    </span>
+                  )}
+                </>
+              )}
+
+              {/* FINALIZZATA - ACQUIRENTE PUÒ CONFERMARE */}
+              {isFinalized && isBuyer && !F.confirmed && (
+                <button
+                  className={styles.btn}
+                  onClick={() => onConfirmReceived(F.id)}
+                >
+                  Conferma di aver ricevuto
+                </button>
+              )}
+
+              {isFinalized && isBuyer && F.confirmed && (
+                <span className={styles.badge}>Transazione completata</span>
+              )}
+            </>
+          )}
+        </div>
       </div>
-    </div>
+      {/* POPUP ELIMINA ANNUNCIO */}
+      {deletePopupVisible && (
+        <div className={styles.deletePopUp}>
+          <h3>Sei sicuro di voler eliminare questo annuncio? </h3>
+          <p>Questa operazione non è reversibile.</p>
+          <div className={styles.buttonGroup}>
+            <button
+              className={styles.btnConfirm}
+              onClick={() => {
+                onDelete?.(F.id);
+                setDeletePopupVisible(false);
+              }}
+            >
+              Conferma
+            </button>
+            <button
+              className={styles.btnCancel}
+              onClick={() => setDeletePopupVisible(false)}
+            >
+              Annulla
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
