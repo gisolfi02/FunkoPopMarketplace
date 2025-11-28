@@ -91,7 +91,7 @@
   transform: translateY(-4px);
 }
 
-.compra {
+.compra{
   align-self: center;
   padding: 12px 20px;
   background: #ff9e48;
@@ -109,6 +109,77 @@
   background: #66a3ff;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
   transform: translateY(-4px);
+}
+
+.asta{
+  align-self: center;
+  padding: 12px 20px;
+  background: #ff9e48;
+  border-radius: 10px;
+  color: #082308;
+  font-weight: 700;
+  font-size: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: none;
+}
+
+.timeLeftBox {
+  text-align: center;
+  margin-top: 12px;
+  margin-bottom: 14px;
+  padding: 10px 12px;
+  background: #042c47;
+  border: none;
+  border-radius: 10px;
+}
+
+
+.timeLabel {
+  font-size: 13px;
+  font-weight: 800;
+  color: #ff9e48;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
+
+.timeValue {
+  font-size: 20px;
+  color: #e6edf3;
+  font-weight: 700;
+}
+
+
+.timeEnded {
+  font-size: 16px;
+  font-weight: 800;
+  color: #da6c0c;
+}
+
+.offerBox {
+  text-align: center;
+  margin-top: 18px;
+  padding: 12px;
+  background: #042c47; 
+  border: 2px solid #66a3ff;
+  border-radius: 12px;
+}
+
+.offerLabel {
+  color: #66a3ff;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
+/* VALORE (grande) */
+.offerValue {
+  font-size: 22px;
+  font-weight: 700;
+  color: #e6edf3;
 }
 
 .img {
