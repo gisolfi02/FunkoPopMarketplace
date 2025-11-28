@@ -15,6 +15,8 @@ export default function ListingCard({
   const [timeLeft, setTimeLeft] = useState("");
 
   const [deletePopupVisible, setDeletePopupVisible] = useState(false);
+  const [bidPopupVisible, setBidPopupVisible] = useState(false);
+  const [bidValue, setBidValue] = useState("");
 
   const isSeller = me && F.seller?.toLowerCase() === me.toLowerCase();
   const isBuyer = me && F.buyer?.toLowerCase() === me.toLowerCase();
@@ -164,12 +166,7 @@ export default function ListingCard({
                   {!isSeller && (
                     <button
                       className={styles.btn}
-                      onClick={() => {
-                        const value = prompt(
-                          "Inserisci la tua offerta in ETH:"
-                        );
-                        if (value) onBid(F.id, value);
-                      }}
+                      onClick={() => setBidPopupVisible(true)}
                     >
                       Fai un'Offerta
                     </button>
@@ -235,6 +232,46 @@ export default function ListingCard({
             <button
               className={styles.btnCancel}
               onClick={() => setDeletePopupVisible(false)}
+            >
+              Annulla
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* POPUP OFFERTA */}
+      {bidPopupVisible && (
+        <div className={styles.deletePopUp}>
+          <h3 className={styles.text}>Inserisci la tua offerta</h3>
+          <p className={styles.text}>Digita l'importo in ETH.</p>
+          <input
+            type="number"
+            step="0.0001"
+            value={bidValue}
+            onChange={(e) => setBidValue(e.target.value)}
+            className={styles.inputBid}
+            placeholder="0 ETH"
+          />
+
+          <div className={styles.buttonGroup}>
+            <button
+              className={styles.btnConfirm}
+              onClick={() => {
+                if (!bidValue || Number(bidValue) <= 0) return;
+                onBid(F.id, bidValue);
+                setBidPopupVisible(false);
+                setBidValue("");
+              }}
+            >
+              Invia offerta
+            </button>
+
+            <button
+              className={styles.btnCancel}
+              onClick={() => {
+                setBidPopupVisible(false);
+                setBidValue("");
+              }}
             >
               Annulla
             </button>

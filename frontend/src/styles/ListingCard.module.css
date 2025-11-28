@@ -297,3 +297,22 @@
   transform: translateY(-4px);
 }
 
+.inputBid {
+  width: 80%;
+  padding: 10px 12px;
+  margin-top: 10px;
+  font-size: 16px;
+  border: 2px solid #66a3ff;
+  border-radius: 10px;
+  outline: none;
+  text-align: center;
+  color: #082308;
+}
+
+.inputBid:focus {
+  border-color: #ff9e48;
+}
+
+.text{
+  color: #042c47;
+}
