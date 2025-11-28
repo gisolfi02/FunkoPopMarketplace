@@ -23,10 +23,10 @@
 
 .row {
   display: flex;
-  gap: 8px;
-  align-items: center;
-  justify-content: space-between;
-  flex-direction: column; /* Aggiunto per colonna, se necessario */
+  flex-wrap: wrap;             /* permette di andare a capo */
+  justify-content: center;     /* CENTRA il contenuto */
+  gap: 12px;
+
 }
 
 .infoRow {
@@ -296,3 +296,4 @@
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
   transform: translateY(-4px);
 }
+
