@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import ListingCard from "./ListingCard";
 import { getContract } from "../lib/eth";
 import styles from "../styles/ProfilePage.module.css";
+import sadFace from "../img/sad.png";
 
 export default function ProfilePage({ account }) {
   const [sellingItems, setSellingItems] = useState([]);
@@ -126,7 +127,10 @@ export default function ProfilePage({ account }) {
             />
           ))
         ) : (
-          <p className={styles.p}>Nessun Funko in vendita</p>
+          <div className={styles.emptyBox}>
+            <img src={sadFace} alt="Nessun elemento" className={styles.emptyImg} />
+            <p className={styles.emptyText}>Nessun Funko in vendita</p>
+          </div>
         )}
       </div>
 
@@ -142,7 +146,10 @@ export default function ProfilePage({ account }) {
             />
           ))
         ) : (
-          <p className={styles.p}>Nessun Funko acquistato</p>
+          <div className={styles.emptyBox}>
+            <img src={sadFace} alt="Nessun elemento" className={styles.emptyImg} />
+            <p className={styles.emptyText}>Nessun Funko acquistato</p>
+          </div>
         )}
       </div>
 
@@ -153,7 +160,10 @@ export default function ProfilePage({ account }) {
             <ListingCard key={String(F.id)} F={F} me={account} />
           ))
         ) : (
-          <p className={styles.p}>Nessun Funko ricevuto</p>
+          <div className={styles.emptyBox}>
+            <img src={sadFace} alt="Nessun elemento" className={styles.emptyImg} />
+            <p className={styles.emptyText}>Nessun Funko ricevuto</p>
+          </div>
         )}
       </div>
     </div>

@@ -1,18 +1,63 @@
 .profilePage {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
 }
 
 .h2 {
+  font-size: 40px;
+  font-weight: 800;
+  color: #042c47;
+  margin: 40px 0 20px 0;
+  position: relative;
+}
+
+.h2::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: #ff9e48;
+  border-radius: 4px;
 }
 
 .p {
+  font-size: 16px;
+  color: #1f2a3a;
+  line-height: 1.5;
 }
 
 .grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr); /* 4 colonne fisse */
-  gap: 24px;
+  gap: 32px;
   padding-bottom: 100px;
   max-width: 1200px;
   margin-left: 1%;
   margin-right: 1%;
+  margin-bottom: 60px;
+}
+
+.emptyBox {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 0 40px 0;
+}
+
+.emptyImg {
+  max-width: 280px;
+  width: 40%;
+  height: auto;
+  opacity: 0.95;
+  margin-bottom: 12px;
+}
+
+.emptyText {
+  color: #1f2a3a;
+  font-size: 24px;
 }
