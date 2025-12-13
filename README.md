@@ -121,7 +121,7 @@ In root run:
 ```bash
 npm run compile
 ```
-It will complie the contract in ```/contracts```, deploy it to **Gancache** and set up the environment variable ```VITE_CONTRACT_ADRRESS```
+It will complie the contract in ```/contracts```, deploy it to **Ganache** and set up the environment variable ```VITE_CONTRACT_ADRRESS```
 
 ### 5️⃣​ Start the frontend
 
