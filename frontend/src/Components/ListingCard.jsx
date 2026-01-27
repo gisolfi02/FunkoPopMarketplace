@@ -27,6 +27,8 @@ export default function ListingCard({
   const isFinalized = F.finalized;
 
   const auctionEnd = Number(F.auctionEndTime);
+  const hasNoBid =
+    F.highestBidder === "0x0000000000000000000000000000000000000000";
 
   useEffect(() => {
     if (!isAuction || !auctionEnd) return;
@@ -175,6 +177,16 @@ export default function ListingCard({
                   {isSeller && (
                     <span className={styles.asta}>Asta in corso</span>
                   )}
+                  {isSeller && (
+                    <button
+                      className={styles.btn}
+                      onClick={() => {
+                        setDeletePopupVisible(true);
+                      }}
+                    >
+                      Elimina annuncio
+                    </button>
+                  )}
                 </>
               )}
 
@@ -182,12 +194,30 @@ export default function ListingCard({
               {auctionExpired && !isFinalized && (
                 <>
                   {isSeller && (
-                    <button
-                      className={styles.btn}
-                      onClick={() => onFinalizeAuction(F.id)}
-                    >
-                      Finalizza Asta
-                    </button>
+                    <>
+                      {hasNoBid ? (
+                        <>
+                          <span className={styles.badge}>
+                            Nessuna offerta ricevuta
+                          </span>
+                          <button
+                            className={styles.btn}
+                            onClick={() => {
+                              setDeletePopupVisible(true);
+                            }}
+                          >
+                            Elimina annuncio
+                          </button>
+                        </>
+                      ) : (
+                        <button
+                          className={styles.btn}
+                          onClick={() => onFinalizeAuction(F.id)}
+                        >
+                          Finalizza Asta
+                        </button>
+                      )}
+                    </>
                   )}
                   {!isSeller && (
                     <span className={styles.badge}>

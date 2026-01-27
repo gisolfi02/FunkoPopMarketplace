@@ -70,9 +70,16 @@ contract FunkoPopMarketplace {
     }
 
     function deleteFunko(uint _id) external onlySeller(_id){
-        require(!funkos[_id].sold && !funkos[_id].isAuction, "Non e' possibile eliminare un oggetto venduto o in asta");
+        FunkoPop storage item = funkos[_id];
+        require(!item.sold && !item.finalized, "Non e' possibile eliminare un oggetto venduto o un'asta finalizzata");
+        
+        if(item.isAuction && item.highestBidder != address(0)){
+            (bool refunded,) = item.highestBidder.call{value: item.highestBid}("");
+            require(refunded, "Rimborso al precedente offerente fallito");
+        }
 
         delete funkos[_id];
+        emit Deleted(_id, item.nameFunko);
     }
 
     function buyFunko(uint _id) external payable{
@@ -97,7 +104,7 @@ contract FunkoPopMarketplace {
         funkos[funkoCount] = FunkoPop({
             id: funkoCount,
             nameFunko : _nameFunko,
-            description: string(abi.encodePacked(_nameCharacter, " - ", _category, " - ", _license, " -", _boxNumber)),
+            description: string(abi.encodePacked(_nameCharacter, " - ", _category, " - ", _license, " - N:", _boxNumber)),
             image: _image,
             price: _startingPrice,
             seller: payable(msg.sender),
