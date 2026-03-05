@@ -28,15 +28,9 @@ export default function ListingGrid({ account, mode, search, onSuccess }) {
         } catch {}
       }
 
-      const filtered = acc.filter((F) => {
-        const q = search.toLowerCase();
-        return (
-          F.nameFunko?.toLowerCase().includes(q) ||
-          F.description?.toLowerCase().includes(q)
-        );
-      });
-
-      setItems(filtered);
+      // Nota: Il filtro per nome/description non è più possibile perché i dati sono su IPFS
+      // Mostriamo tutti i Funko - il filtro viene gestito a livello di ListingCard sui metadati
+      setItems(acc);
     } catch (e) {
       console.log(e.message);
     }
@@ -97,7 +91,7 @@ export default function ListingGrid({ account, mode, search, onSuccess }) {
       if (e.code === "CALL_EXCEPTION") {
         console.error("Revert della transazione:", e.data);
         alert(
-          "Impossibile finalizzare l'asta. Verifica che l'asta sia terminata o già finalizzata."
+          "Impossibile finalizzare l'asta. Verifica che l'asta sia terminata o già finalizzata.",
         );
       } else {
         alert("Si è verificato un errore durante la finalizzazione.");

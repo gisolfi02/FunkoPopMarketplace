@@ -4,9 +4,7 @@ pragma solidity ^0.8.30;
 contract FunkoPopMarketplace {
     struct FunkoPop {
         uint id;
-        string nameFunko;
-        string description; // nameCharacter - category - license - boxNumber
-        string image;
+        string metadata; // IPFS hash contenente tutti i dati del Funko
         uint price;      
    
         //VENDITA DIRETTA
@@ -36,24 +34,22 @@ contract FunkoPopMarketplace {
         _;
     }
 
-    event Added(uint id, address seller, string nameFunko, uint price);
-    event Deleted(uint id, string nameFunko);
-    event Purchased(uint id, address buyer);
-    event Confirmed(uint id, address seller);
-    event Auction(uint id, address seller, uint price, uint endTime, string nameFunko);
-    event BidPlaced(uint id, address bidder, uint price);
-    event AuctionFinalized(uint id, address buyer, uint bid);
+    event Added(uint indexed id, address indexed seller, uint price);
+    event Deleted(uint indexed id);
+    event Purchased(uint indexed id, address indexed buyer);
+    event Confirmed(uint indexed id, address indexed seller);
+    event Auction(uint indexed id, address indexed seller, uint price, uint endTime);
+    event BidPlaced(uint indexed id, address indexed bidder, uint price);
+    event AuctionFinalized(uint indexed id, address indexed buyer, uint bid);
     
 
 
-    function createFunko(string memory _nameFunko, string memory _nameCharacter, string memory _image, string memory _category, string memory _license, string memory _boxNumber, uint _price) external {
+    function createFunko(string memory _metadataHash, uint _price) external {
         require(_price > 0, "Il prezzo deve essere maggiore di zero");
         funkoCount++;
         funkos[funkoCount] = FunkoPop({
             id: funkoCount,
-            nameFunko : _nameFunko,
-            description: string(abi.encodePacked(_nameCharacter, " - ", _category, " - ", _license, " -", _boxNumber)),
-            image: _image,
+            metadata: _metadataHash,
             price: _price,
             seller: payable(msg.sender),
             buyer: payable(address(0)),
@@ -66,7 +62,7 @@ contract FunkoPopMarketplace {
             finalized: false
         });
 
-        emit Added(funkoCount, msg.sender, _nameFunko, _price);
+        emit Added(funkoCount, msg.sender, _price);
     }
 
     function deleteFunko(uint _id) external onlySeller(_id){
@@ -79,7 +75,7 @@ contract FunkoPopMarketplace {
         }
 
         delete funkos[_id];
-        emit Deleted(_id, item.nameFunko);
+        emit Deleted(_id);
     }
 
     function buyFunko(uint _id) external payable{
@@ -97,15 +93,13 @@ contract FunkoPopMarketplace {
     }
 
 
-    function createAuction(string memory _nameFunko, string memory _nameCharacter, string memory _image, string memory _category, string memory _license, string memory _boxNumber, uint _startingPrice, uint _duration) external {
+    function createAuction(string memory _metadataHash, uint _startingPrice, uint _duration) external {
         require(_startingPrice > 0, "Il prezzo di partenza deve essere maggiore di zero");
         funkoCount++;
 
         funkos[funkoCount] = FunkoPop({
             id: funkoCount,
-            nameFunko : _nameFunko,
-            description: string(abi.encodePacked(_nameCharacter, " - ", _category, " - ", _license, " - N:", _boxNumber)),
-            image: _image,
+            metadata: _metadataHash,
             price: _startingPrice,
             seller: payable(msg.sender),
             buyer: payable(address(0)),
@@ -118,7 +112,7 @@ contract FunkoPopMarketplace {
             finalized: false
         });
         
-        emit Auction(funkoCount, msg.sender, _startingPrice, block.timestamp + _duration, _nameFunko);
+        emit Auction(funkoCount, msg.sender, _startingPrice, block.timestamp + _duration);
     }
 
     function placeBid(uint _id) external payable{

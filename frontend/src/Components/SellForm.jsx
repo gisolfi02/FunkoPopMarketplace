@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { getContract, parseEther } from "../lib/eth";
-import { uploadToLighthouse } from "../lib/ipfs";
+import { uploadToLighthouse, uploadMetadataToIPFS } from "../lib/ipfs";
 import styles from "../styles/SellForm.module.css";
 
 const CATEGORIES = [
@@ -317,22 +317,17 @@ export default function SellForm({ onCreated }) {
 
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
-  async function handleUpload() {
-    try {
-      setBusy(true);
-      const cidUrl = await uploadToLighthouse(file); // ottieni ipfs://CID
-      set("image", cidUrl);
-    } catch (e) {
-      console.log(e.message);
-    } finally {
-      setBusy(false);
-    }
-  }
-
   async function submit(e) {
     e.preventDefault();
     setBusy(true);
     try {
+      // Se c'è un file da caricare, caricalo su IPFS prima
+      let imageHash = form.image;
+      if (file) {
+        imageHash = await uploadToLighthouse(file);
+        set("image", imageHash);
+      }
+
       const { BrowserProvider } = await import("ethers");
       const provider = new BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
@@ -340,16 +335,21 @@ export default function SellForm({ onCreated }) {
 
       const priceWei = parseEther(form.price);
 
+      // Crea il metadata JSON con tutti i dati del Funko
+      const metadata = {
+        name: form.nameFunko,
+        character: form.nameCharacter,
+        category: form.category,
+        license: form.license,
+        boxNumber: form.boxNumber,
+        image: imageHash, // hash IPFS dell'immagine
+      };
+
+      // Carica il metadata su IPFS
+      const metadataHash = await uploadMetadataToIPFS(metadata);
+
       if (!form.isAuction) {
-        const tx = await c.createFunko(
-          form.nameFunko,
-          form.nameCharacter,
-          form.image,
-          form.category,
-          form.license,
-          form.boxNumber,
-          priceWei
-        );
+        const tx = await c.createFunko(metadataHash, priceWei);
 
         await tx.wait();
         onCreated?.("Annuncio creato con successo!");
@@ -357,14 +357,9 @@ export default function SellForm({ onCreated }) {
         const durationSeconds = Number(form.auctionDuration) * 60;
 
         const tx = await c.createAuction(
-          form.nameFunko,
-          form.nameCharacter,
-          form.image,
-          form.category,
-          form.license,
-          form.boxNumber,
+          metadataHash,
           priceWei, // starting price in ETH → wei
-          durationSeconds // minuti → secondi
+          durationSeconds, // minuti → secondi
         );
 
         await tx.wait();
@@ -462,15 +457,6 @@ export default function SellForm({ onCreated }) {
         <span className={styles.nomeFile}>
           {file ? file.name : "Nessun file selezionato"}
         </span>
-
-        <button
-          type="button"
-          className={styles.btn}
-          disabled={!file || busy}
-          onClick={handleUpload}
-        >
-          Carica su IPFS (Lighthouse)
-        </button>
       </div>
 
       {/*Selezione tipologia di vendita*/}
@@ -554,7 +540,10 @@ export default function SellForm({ onCreated }) {
               onChange={(e) => set("price", e.target.value)}
               required
             />
-            <button className={styles.btn} disabled={busy}>
+            <button
+              className={styles.btn}
+              disabled={busy || (!file && !form.image)}
+            >
               Crea annuncio
             </button>
           </div>
@@ -577,7 +566,10 @@ export default function SellForm({ onCreated }) {
               onChange={(e) => set("auctionDuration", e.target.value)}
               required
             />
-            <button className={styles.btn} disabled={busy}>
+            <button
+              className={styles.btn}
+              disabled={busy || (!file && !form.image)}
+            >
               Crea annuncio
             </button>
           </div>

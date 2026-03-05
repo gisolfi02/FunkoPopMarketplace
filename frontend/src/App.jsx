@@ -113,7 +113,9 @@ export default function App() {
         {/* ---------------- PAGINA PROFILO ---------------- */}
         <Route
           path="/profile"
-          element={<ProfilePage account={session?.account} />}
+          element={
+            <ProfilePage account={session?.account} onSuccess={notifySuccess} />
+          }
         />
       </Routes>
 

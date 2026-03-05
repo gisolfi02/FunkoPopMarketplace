@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { formatEther } from "../lib/eth";
-import { toHttpFromIpfs } from "../lib/ipfs";
+import { toHttpFromIpfs, fetchMetadataFromIPFS } from "../lib/ipfs";
 import styles from "../styles/ListingCard.module.css";
 
 export default function ListingCard({
@@ -13,6 +13,9 @@ export default function ListingCard({
   onDelete,
 }) {
   const [timeLeft, setTimeLeft] = useState("");
+  const [metadata, setMetadata] = useState(null);
+  const [loadingMetadata, setLoadingMetadata] = useState(true);
+  const [imageError, setImageError] = useState(false);
 
   const [deletePopupVisible, setDeletePopupVisible] = useState(false);
   const [bidPopupVisible, setBidPopupVisible] = useState(false);
@@ -20,8 +23,36 @@ export default function ListingCard({
 
   const isSeller = me && F.seller?.toLowerCase() === me.toLowerCase();
   const isBuyer = me && F.buyer?.toLowerCase() === me.toLowerCase();
-  const img =
-    toHttpFromIpfs(F.image) || "https://placehold.co/600x400?text=Funko";
+
+  // Carica i metadati da IPFS quando il componente si monta
+  useEffect(() => {
+    async function loadMetadata() {
+      if (!F.metadata) {
+        setLoadingMetadata(false);
+        return;
+      }
+      try {
+        const data = await fetchMetadataFromIPFS(F.metadata);
+        setMetadata(data);
+      } catch (e) {
+        console.error("Errore nel caricamento dei metadati:", e);
+      } finally {
+        setLoadingMetadata(false);
+      }
+    }
+    loadMetadata();
+  }, [F.metadata]);
+
+  // Usa i metadati se disponibili, altrimenti fallback ai dati del contratto
+  const img = metadata?.image
+    ? toHttpFromIpfs(metadata.image)
+    : "https://placehold.co/600x400?text=Funko";
+
+  const displayName = metadata?.name || "Funko (metadata non disponibile)";
+  const displayDescription = metadata
+    ? `${metadata.character} - ${metadata.category} - ${metadata.license} - Box #${metadata.boxNumber}`
+    : "Caricamento dati...";
+
   const isAuction = F.isAuction;
   const isSold = F.sold;
   const isFinalized = F.finalized;
@@ -67,13 +98,18 @@ export default function ListingCard({
     <div className={styles.card}>
       <div className={styles.content}>
         {/* IMMAGINE */}
-        <img src={img} alt={F.nameFunko} className={styles.img} />
+        <img
+          src={imageError ? "https://placehold.co/600x400?text=Funko" : img}
+          alt={displayName}
+          className={styles.img}
+          onError={() => setImageError(true)}
+        />
 
         {/* TITOLO */}
-        <h3 className={styles.h3}>{F.nameFunko}</h3>
+        <h3 className={styles.h3}>{displayName}</h3>
 
         {/* DESCRIZIONE */}
-        <p className={styles.p}>{F.description}</p>
+        <p className={styles.p}>{displayDescription}</p>
 
         {/* SEZIONE PREZZI / ASTA */}
         {!isAuction ? (

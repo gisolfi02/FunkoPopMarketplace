@@ -4,7 +4,7 @@ import { getContract } from "../lib/eth";
 import styles from "../styles/ProfilePage.module.css";
 import sadFace from "../img/sad.png";
 
-export default function ProfilePage({ account }) {
+export default function ProfilePage({ account, onSuccess }) {
   const [sellingItems, setSellingItems] = useState([]);
   const [boughtItems, setBoughtItems] = useState([]);
   const [receivedItems, setReceivedItems] = useState([]);
@@ -67,7 +67,7 @@ export default function ProfilePage({ account }) {
 
       const tx = await c.finalizeAuction(id);
       await tx.wait();
-      await fetchListings();
+      await fetchProfileData();
       onSuccess?.("Asta finalizzata!");
     } catch (e) {
       console.log(e.message);
@@ -85,7 +85,7 @@ export default function ProfilePage({ account }) {
       tx = await c.confirmRecived(id);
 
       await tx.wait();
-      await fetchListings();
+      await fetchProfileData();
       onSuccess?.("Ricezione confermata!");
     } catch (e) {
       console.log(e.message);
@@ -101,7 +101,7 @@ export default function ProfilePage({ account }) {
 
       const tx = await c.deleteFunko(id);
       await tx.wait();
-      await fetchListings();
+      await fetchProfileData();
       onSuccess?.("Annuncio eliminato!");
     } catch (e) {
       console.log(e.message);
@@ -128,7 +128,11 @@ export default function ProfilePage({ account }) {
           ))
         ) : (
           <div className={styles.emptyBox}>
-            <img src={sadFace} alt="Nessun elemento" className={styles.emptyImg} />
+            <img
+              src={sadFace}
+              alt="Nessun elemento"
+              className={styles.emptyImg}
+            />
             <p className={styles.emptyText}>Nessun Funko in vendita</p>
           </div>
         )}
@@ -147,7 +151,11 @@ export default function ProfilePage({ account }) {
           ))
         ) : (
           <div className={styles.emptyBox}>
-            <img src={sadFace} alt="Nessun elemento" className={styles.emptyImg} />
+            <img
+              src={sadFace}
+              alt="Nessun elemento"
+              className={styles.emptyImg}
+            />
             <p className={styles.emptyText}>Nessun Funko acquistato</p>
           </div>
         )}
@@ -161,7 +169,11 @@ export default function ProfilePage({ account }) {
           ))
         ) : (
           <div className={styles.emptyBox}>
-            <img src={sadFace} alt="Nessun elemento" className={styles.emptyImg} />
+            <img
+              src={sadFace}
+              alt="Nessun elemento"
+              className={styles.emptyImg}
+            />
             <p className={styles.emptyText}>Nessun Funko ricevuto</p>
           </div>
         )}
